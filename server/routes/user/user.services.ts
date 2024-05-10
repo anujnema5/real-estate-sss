@@ -4,6 +4,11 @@ import { ApiResponse } from "@/utils/responses/ApiResponse";
 import { UserRequest } from "@/utils/types/types";
 import { Request, Response } from "express";
 
+export const getUser = async (req: UserRequest, res: Response)=> {
+    const user = req.user;
+    return res.status(200).json(new ApiResponse(200, user));
+}
+
 export const editUser = async (req: UserRequest, res: Response) => {
     const userdId = req.user.id;
     const updatedField = req.body;

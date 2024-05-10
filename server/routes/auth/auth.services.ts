@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { LoginSchema, UserSchema, loginSchema, userSchema } from "@/schema/user.schema";
 import { CustomError } from "@/utils/responses/ApiError";
-import { getUserByEmail, getUserById, getUserByPhoneNumber } from "@/utils/database/databaseUtils";
+import { getUserByEmail, getUserById, getUserByPhoneNumber } from "@/utils/database/getEntity";
 import { Request, Response } from "express"
 import { z } from "zod";
 import { generateAccessRefreshToken } from "@/utils/tokens/token.utils";

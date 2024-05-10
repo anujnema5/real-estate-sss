@@ -1,5 +1,5 @@
 import { db } from '@/db';
-import { getUserByEmail } from '@/utils/database/databaseUtils';
+import { getUserByEmail } from '@/utils/database/getEntity';
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
 

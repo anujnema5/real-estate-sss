@@ -1,4 +1,4 @@
-import { getUserById, getVendorByUserId } from "@/utils/database/databaseUtils";
+import { getUserById, getVendorByUserId } from "@/utils/database/getEntity";
 import { CustomError } from "@/utils/responses/ApiError";
 import { VendorRequest } from "@/utils/types/types";
 import { User, Vendor } from "@prisma/client";

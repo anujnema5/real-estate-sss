@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { getUserByEmail, getUserById, getvendorById } from "../database/databaseUtils"
+import { getUserByEmail, getUserById, getvendorById } from "../database/getEntity"
 import { User, Vendor } from "@prisma/client";
 import jwt from 'jsonwebtoken';
 import { CustomError, getStatusCodeFromError } from "../responses/ApiError";

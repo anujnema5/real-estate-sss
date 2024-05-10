@@ -47,7 +47,7 @@ export const editProperty = async (req: VendorRequest, res: Response) => {
 
 }
 
-export const deleteProperty = async (req: Request, res: Response) => {
+export const deleteProperty = async (req: VendorRequest, res: Response) => {
     const propertyId = req.params.propertyId;
     const existingProperty = db.property.delete({ where: { id: propertyId } })
 
