@@ -7,5 +7,7 @@ import devRoutes from '@/routes/dev/dev.controllers'
 const api = Router()
     .use(authRoutes)
     .use(vendorRoutes)
+    .use(devRoutes)
+    .use(userRoutes)
 
 export default api.use('/v1', api);
