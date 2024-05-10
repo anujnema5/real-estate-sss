@@ -1,0 +1,110 @@
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum propertyType {
+  apartment
+  house
+  condo
+  pg
+  single
+}
+
+enum bookingStatus {
+  confirmed
+  pending
+  cancelled
+}
+
+model User {
+  id            String    @id @default(cuid())
+  firstName     String?
+  lastName      String?
+  username      String?
+  email         String?   @unique
+  emailVerified Boolean?  @default(false)
+  password      String?
+  googleId      String?
+  provider      String?
+  phoneNumber   String?   @unique
+  refreshToken  String?   @db.Text
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  account       Account?
+  vendor        Vendor?
+  Booking       Booking[]
+}
+
+model Account {
+  id     String  @id @default(cuid())
+  userId String  @unique
+  avatar String?
+  bio    String? @db.Text
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Vendor {
+  id        String     @id @default(cuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  userId    String     @unique
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  property  Property[]
+}
+
+model Property {
+  id          String           @id @default(cuid())
+  title       String
+  description String
+  type        propertyType
+  address     String
+  city        String
+  state       String
+  zipcode     String
+  price       Float
+  bedrooms    Int
+  bathrooms   Int
+  areaSize    Float
+  available   Boolean
+  latitude    Float?
+  longitude   Float?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  vendorId    String           @unique
+  vendor      Vendor           @relation(fields: [vendorId], references: [id])
+  booking     Booking?
+  images      PropertyImages[]
+}
+
+model PropertyImages {
+  id         String   @id @default(cuid())
+  url        String
+  alt        String?
+  uploadedAt DateTime @default(now())
+  propertyId String   @unique
+  property   Property @relation(fields: [propertyId], references: [id])
+}
+
+model Booking {
+  id               String        @id @default(cuid())
+  userId           String        @unique
+  propertyId       String        @unique
+  checkInDate      DateTime
+  checkOutDate     DateTime
+  totalPrice       Float
+  status           bookingStatus
+  approved         Boolean?      @default(false)
+  rejectedByUser   Boolean?
+  rejectedByVendor Boolean?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  property         Property      @relation(fields: [propertyId], references: [id])
+  User             User          @relation(fields: [userId], references: [id])
+}
