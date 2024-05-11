@@ -6,7 +6,7 @@ import { Subscription, User, Vendor } from "@prisma/client";
 import { NextFunction, Request, Response } from "express"
 import { verify } from "jsonwebtoken";
 
-export const getToken = (req: Request) => {
+const getToken = (req: Request) => {
     const token = req.header("Authorization")?.replace("Bearer ", "") || req.cookies.accessToken;
 
     if (!token) {
@@ -21,14 +21,28 @@ export const verifyUser = async (req: UserRequest, res: Response, next: NextFunc
     const token = getToken(req) as any;
 
     const user = await getUserById(token.userId);
+
+    if(!user) {
+        throw new CustomError(401, "User not found")
+    }
+    
     req.user = user;
     next();
 }
 
 export const verifyVendor = async (req: VendorRequest, res: Response, next: NextFunction) => {
-    const token = getToken(req) as any;
-    const user = await getUserById(token.userId) as User;
-    const vendor = await getVendorByUserId(user.id) as Vendor
+    const userId = getToken(req).userId as string;
+
+    const user = await db.user.findUnique({where: {id: userId}, include: {vendor: true}});
+    const vendor = user?.vendor;
+
+    if(!user) {
+        throw new CustomError(401, "User Not Found");
+    }
+
+    if(!vendor) {
+        throw new CustomError(401, "Vendor not found")
+    }
 
     req.user = user;
     req.vendor = vendor;

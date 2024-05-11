@@ -24,6 +24,7 @@ export const initiateCall = async (req: VerifySubscription, res: Response) => {
 
 export const getProperty = async (req: UserSubRequest, res: Response) => {
     const subscriber = req.subscriber;
+    const subscriptionType = req.subscription;
     const propertyId = req.params.propertyId;
 
     const property = await db.property.findUnique({
