@@ -44,3 +44,19 @@ export const getProperty = async (req: UserSubRequest, res: Response) => {
 
     return res.status(200).json(new ApiResponse(200, property))
 }
+
+export const getRandomProperties = async (req: Request, res: Response) => {
+    const randomProperties = await db.property.findMany({
+        take: 10,
+        skip: Math.floor(Math.random() * 50),
+    });
+
+    return res.status(200).json(new ApiResponse(200, randomProperties))
+}
+
+export const getPropertiesFromCity = async (req: Request, res: Response) => {
+    const city = req.params.city.toLowerCase();
+    const properties = await db.property.findMany({ where: { city } })
+
+    return res.status(200).json(new ApiResponse(200, properties));
+}

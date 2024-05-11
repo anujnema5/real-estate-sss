@@ -22,10 +22,10 @@ export const verifyUser = async (req: UserRequest, res: Response, next: NextFunc
 
     const user = await getUserById(token.userId);
 
-    if(!user) {
+    if (!user) {
         throw new CustomError(401, "User not found")
     }
-    
+
     req.user = user;
     next();
 }
@@ -33,14 +33,14 @@ export const verifyUser = async (req: UserRequest, res: Response, next: NextFunc
 export const verifyVendor = async (req: VendorRequest, res: Response, next: NextFunction) => {
     const userId = getToken(req).userId as string;
 
-    const user = await db.user.findUnique({where: {id: userId}, include: {vendor: true}});
+    const user = await db.user.findUnique({ where: { id: userId }, include: { vendor: true } });
     const vendor = user?.vendor;
 
-    if(!user) {
+    if (!user) {
         throw new CustomError(401, "User Not Found");
     }
 
-    if(!vendor) {
+    if (!vendor) {
         throw new CustomError(401, "Vendor not found")
     }
 
@@ -81,7 +81,7 @@ export const verifySubscription = async (req: VerifySubscription, res: Response,
     next();
 };
 
-export const userType = async (req: UserSubRequest, res: Response, next:NextFunction) => {
+export const userType = async (req: UserSubRequest, res: Response, next: NextFunction) => {
     const userId = getToken(req).userId
 
     const user = await db.user.findUnique({

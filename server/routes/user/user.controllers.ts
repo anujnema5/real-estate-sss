@@ -11,7 +11,6 @@ const router: Router = Router()
     
     // BOOKING ROUTES FOR THIS USER
     .use('/booking', bookingControllers)
-    .use('/')
 
     // USER AVATAR APIs
     .get('/avatar', use(verifyUser), use(getUserAvatar))
