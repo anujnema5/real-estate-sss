@@ -1,11 +1,24 @@
-import { User, Vendor } from "@prisma/client";
+import { Subscription, User, Vendor } from "@prisma/client";
 import { Request } from "express";
 
 export interface UserRequest extends Request {
-    user : User
+    user: User
 }
 
 export interface VendorRequest extends Request {
     user: User,
-    vendor : Vendor
+    vendor: Vendor
+}
+
+export interface VerifySubscription extends Request {
+    user: User,
+    vendor: Vendor | null,
+    subscription: Subscription | null,
+}
+
+export interface UserSubRequest extends Request {
+    user : User 
+    vendor: Vendor | null
+    subscription: Subscription | null
+    subscriber: Boolean
 }

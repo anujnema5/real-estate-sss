@@ -9,37 +9,53 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum propertyType {
+enum PropertyType {
   apartment
   house
   condo
   pg
   single
+  library
+  mess
 }
 
-enum bookingStatus {
+enum BookingStatus {
   confirmed
   pending
   cancelled
 }
 
+enum SubscriptionPlan {
+  starter
+  pro
+  business
+}
+
+enum SubscriptionStatus {
+  active
+  inactive
+}
+
 model User {
-  id            String    @id @default(cuid())
+  id            String        @id @default(cuid())
   firstName     String?
   lastName      String?
   username      String?
-  email         String?   @unique
-  emailVerified Boolean?  @default(false)
+  email         String?       @unique
+  emailVerified Boolean?      @default(false)
   password      String?
   googleId      String?
   provider      String?
-  phoneNumber   String?   @unique
-  refreshToken  String?   @db.Text
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  phoneNumber   String?       @unique
+  refreshToken  String?       @db.Text
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
   account       Account?
   vendor        Vendor?
-  Booking       Booking[]
+  booking       Booking[]
+  subscription  Subscription?
+  property      Property[]
+  leads         Interaction[]
 }
 
 model Account {
@@ -51,20 +67,21 @@ model Account {
 }
 
 model Vendor {
-  id        String     @id @default(cuid())
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  userId    String     @unique
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  property  Property[]
-  booking   Booking[]
+  id          String        @id @default(cuid())
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  userId      String        @unique
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  property    Property[]
+  booking     Booking[]
+  interaction Interaction[]
 }
 
 model Property {
   id          String           @id @default(cuid())
   title       String
   description String
-  type        propertyType
+  type        PropertyType
   address     String
   city        String
   state       String
@@ -80,6 +97,8 @@ model Property {
   updatedAt   DateTime         @updatedAt
   vendorId    String           @unique
   vendor      Vendor           @relation(fields: [vendorId], references: [id])
+  userId      String
+  user        User             @relation(fields: [userId], references: [id])
   booking     Booking?
   images      PropertyImages[]
 }
@@ -100,14 +119,36 @@ model Booking {
   checkInDate      DateTime
   checkOutDate     DateTime
   totalPrice       Float
-  status           bookingStatus
+  status           BookingStatus
   approved         Boolean?      @default(false)
   rejectedByUser   Boolean?
   rejectedByVendor Boolean?
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
   property         Property      @relation(fields: [propertyId], references: [id])
-  User             User          @relation(fields: [userId], references: [id])
+  user             User          @relation(fields: [userId], references: [id])
   vendorId         String        @unique
   vendor           Vendor        @relation(fields: [vendorId], references: [id])
+}
+
+model Subscription {
+  id        String             @id @default(cuid())
+  plan      SubscriptionPlan
+  price     Int
+  userId    String             @unique
+  user      User               @relation(fields: [userId], references: [id])
+  duration  Int
+  status    SubscriptionStatus @default(inactive)
+  createdAt DateTime           @default(now())
+  isExpired Boolean            @default(false)
+  updatedAt DateTime           @updatedAt
+}
+
+model Interaction {
+  id        String   @id @default(cuid())
+  vendorId  String
+  vendor    Vendor   @relation(fields: [vendorId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
 }

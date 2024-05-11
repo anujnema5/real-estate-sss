@@ -34,7 +34,33 @@ export const getBookings = async (req: UserRequest, res: Response) => {
     const userId = req.user.id;
     const bookings = await db.booking.findMany({ where: { userId } })
 
-    return res.status(200).json
+    return res.status(200).json(new ApiResponse(200, bookings));
+}
+
+export const getBookingStatus = async (req: UserRequest, res: Response) => {
+    const bookingId = req.params.bookingId;
+    const userId = req.user.id;
+
+    const booking = await db.booking.findUnique({
+        where: { id: bookingId },
+        select: {
+            id: true,
+            userId: true,
+            status: true,
+            approved: true,
+            rejectedByUser: true,
+            rejectedByVendor: true,
+            vendorId: true,
+            createdAt: true,
+            totalPrice:true
+        }
+    });
+
+    if (booking?.userId !== userId) {
+        throw new CustomError(403, "You are not authorized to access this booking");
+    }
+
+    return res.status(200).json(new ApiResponse(200, booking));
 }
 
 export const getSuccessBookings = async (req: UserRequest, res: Response) => {
@@ -46,21 +72,21 @@ export const getSuccessBookings = async (req: UserRequest, res: Response) => {
 
 export const getPendingBookings = async (req: UserRequest, res: Response) => {
     const userId = req.user.id;
-    const successBookings = await db.booking.findMany({where: {status: 'pending', approved: false, userId}});
+    const successBookings = await db.booking.findMany({ where: { status: 'pending', approved: false, userId } });
 
     return res.status(200).json(new ApiResponse(200, successBookings))
 }
 
-export const getCancelledBooking = async (req: UserRequest, res: Response)=> {
+export const getCancelledBooking = async (req: UserRequest, res: Response) => {
     const userId = req.user.id;
-    const caneclledBookings = await db.booking.findMany({where: {status: 'cancelled', approved: false, userId}})
+    const caneclledBookings = await db.booking.findMany({ where: { status: 'cancelled', approved: false, userId } })
 
     return res.status(200).json(new ApiResponse(200, caneclledBookings));
 }
 
-export const getRecentUser = async (req: UserRequest, res: Response)=> {
+export const getRecentUser = async (req: UserRequest, res: Response) => {
     const userId = req.user.id;
 
-    const recentBooking = await db.booking.findFirst({orderBy: {createdAt: 'desc'}, where: {userId}});
+    const recentBooking = await db.booking.findFirst({ orderBy: { createdAt: 'desc' }, where: { userId } });
     return res.status(200).json(new ApiResponse(200, recentBooking));
 }
