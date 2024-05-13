@@ -38,8 +38,6 @@ export const createProperty = async (req: VendorRequest, res: Response) => {
     return res.status(200).json(new ApiResponse(200, newRegisteredProperty, "Property registered successfully"));
 }
 
-
-
 export const addImagesToProperty = async (req: VendorRequest, res: Response) => {
     // TODO, WE'LL BUILD MAKE THIS API AFTER INTEGRATING MULTER AND CLOUDINARY 
 }

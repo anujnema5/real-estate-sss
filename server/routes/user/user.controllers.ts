@@ -5,12 +5,11 @@ import { deleteUserAvatar, editUser, getUser, getUserAvatar, updateUserAvatar } 
 import bookingControllers from "./booking/booking.controllers";
 
 const router: Router = Router()
+    // BOOKING ROUTES FOR THIS USER
+    .use('/booking', bookingControllers)
     // EDIT USER API
     .get('/', use(verifyUser), use(getUser))
     .patch('/', use(verifyUser), use(editUser))
-    
-    // BOOKING ROUTES FOR THIS USER
-    .use('/booking', bookingControllers)
 
     // USER AVATAR APIs
     .get('/avatar', use(verifyUser), use(getUserAvatar))
