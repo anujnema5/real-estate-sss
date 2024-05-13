@@ -8,6 +8,7 @@ import { verify } from "jsonwebtoken";
 
 const getToken = (req: Request) => {
     const token = req.header("Authorization")?.replace("Bearer ", "") || req.cookies.accessToken;
+    console.log(token)
 
     if (!token) {
         throw new CustomError(401, 'Unauthorized request, Token not found')
@@ -31,6 +32,7 @@ export const verifyUser = async (req: UserRequest, res: Response, next: NextFunc
 }
 
 export const verifyVendor = async (req: VendorRequest, res: Response, next: NextFunction) => {
+    console.log('Hey')
     const userId = getToken(req).userId as string;
 
     const user = await db.user.findUnique({ where: { id: userId }, include: { vendor: true } });

@@ -3,11 +3,12 @@ import { use } from "@/utils/responses/handleResponse";
 import { Router } from "express";
 import { getNearByProperty, getPropertiesFromCity, getProperty, getRandomProperties, initiateCall } from "./property.services";
 
-const router: Router = Router()
-    .get('/', use(getRandomProperties))
-    .get('/:city', use(getPropertiesFromCity))
-    .get('/nearby-properties', use(getNearByProperty))
-    .get('/:propertyId', use(userType), use(getProperty))
-    .post('/:propertyId/interact', use(verifySubscription), use(initiateCall))
+const router: Router = Router();
 
-export default router.use('/property', router)
+router.get('/', use(getRandomProperties))
+router.get('/:city', use(getPropertiesFromCity))
+router.get('/nearby-properties', use(getNearByProperty))
+router.get('/:propertyId', use(userType), use(getProperty))
+router.post('/:propertyId/call', use(verifySubscription), use(initiateCall))
+
+export default router

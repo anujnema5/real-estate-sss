@@ -6,11 +6,12 @@ import propertyRoutes from './property/property.controllers'
 import bookingRoutes from './booking/booking.controllers';
 
 const router: Router = Router()
-    .get('/', use(verifyVendor), use(getVendor))
-    .post('/', use(verifyUser), use(createVendorService))
-    .delete('/', use(verifyVendor), use(deleteVendor))
-    .patch('/', use(verifyVendor), use(editVendor))
-    .use('/booking', bookingRoutes)
-    .use('/property', propertyRoutes)
 
-export default router.use('/vendor', router)
+router.get('/', use(verifyVendor), use(getVendor))
+router.post('/', use(verifyUser), use(createVendorService))
+router.delete('/', use(verifyVendor), use(deleteVendor))
+router.patch('/', use(verifyVendor), use(editVendor))
+router.use('/booking', bookingRoutes)
+router.use('/property', propertyRoutes)
+
+export default router;

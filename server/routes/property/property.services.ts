@@ -47,6 +47,7 @@ export const getProperty = async (req: UserSubRequest, res: Response) => {
 }
 
 export const getRandomProperties = async (req: Request, res: Response) => {
+    console.log('Heyloooo')
     const randomProperties = await db.property.findMany({
         take: 10,
         skip: Math.floor(Math.random() * 50),
@@ -57,16 +58,19 @@ export const getRandomProperties = async (req: Request, res: Response) => {
 
 export const getPropertiesFromCity = async (req: Request, res: Response) => {
     const city = req.params.city.toLowerCase();
-
+    console.log(city)
     // ALSO ADD A CHECK SO IT CAN FETCH NEAREST FROM THE USER'S LOCATION
     const properties = await db.property.findMany({ where: { city } })
-
     return res.status(200).json(new ApiResponse(200, properties));
 }
 
 export const getNearByProperty = async (req: Request, res: Response) => {
     const latitude = Number(req.query.latitude);
     const longitude = Number(req.query.longitude);
+
+    if(!latitude || !longitude) {
+        throw new CustomError(400, "Please provide latitude and longitude");
+    }
 
     const { data, error, success } = locationSchema.safeParse({ latitude, longitude });
 

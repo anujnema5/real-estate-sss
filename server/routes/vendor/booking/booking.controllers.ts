@@ -4,13 +4,14 @@ import { Router } from "express";
 import { cancelBooking, confirmBooking, getAllBookings, getAllCancelledBookings, getAllConfirmedBookings, getAllPendingBookings, getBooking, getRecentBooking } from "./booking.services";
 
 const router: Router = Router()
-    .get('/', use(verifyVendor), use(getAllBookings))
-    .get('/:bookingId', use(verifyVendor), use(getBooking))
-    .get('/confirmed', use(verifyVendor), use(getAllConfirmedBookings))
-    .get('/pending', use(verifyVendor), use(getAllPendingBookings))
-    .get('/cancelled', use(verifyVendor), use(getAllCancelledBookings))
-    .get('/recent', use(verifyVendor), use(getRecentBooking))
-    .patch('/:bookingId/confirm', use(verifyVendor), use(confirmBooking))
-    .patch('/:bookingId/cancel', use(verifyVendor), use(cancelBooking))
+
+router.get('/', use(verifyVendor), use(getAllBookings))
+router.get('/:bookingId', use(verifyVendor), use(getBooking))
+router.get('/confirmed', use(verifyVendor), use(getAllConfirmedBookings))
+router.get('/pending', use(verifyVendor), use(getAllPendingBookings))
+router.get('/cancelled', use(verifyVendor), use(getAllCancelledBookings))
+router.get('/recent', use(verifyVendor), use(getRecentBooking))
+router.patch('/:bookingId/confirm', use(verifyVendor), use(confirmBooking))
+router.patch('/:bookingId/cancel', use(verifyVendor), use(cancelBooking))
 
 export default router;

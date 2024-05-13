@@ -4,16 +4,13 @@ import { Router } from "express";
 import { deleteUserAvatar, editUser, getUser, getUserAvatar, updateUserAvatar } from "./user.services";
 import bookingControllers from "./booking/booking.controllers";
 
-const router: Router = Router()
-    // BOOKING ROUTES FOR THIS USER
-    .use('/booking', bookingControllers)
-    // EDIT USER API
-    .get('/', use(verifyUser), use(getUser))
-    .patch('/', use(verifyUser), use(editUser))
+const router: Router = Router();
 
-    // USER AVATAR APIs
-    .get('/avatar', use(verifyUser), use(getUserAvatar))
-    .patch('/avatar', use(verifyUser), use(updateUserAvatar)) // TODO FOR MULTER AND CLOUDINARY
-    .delete('/avatar', use(verifyUser), use(deleteUserAvatar))
+router.get('/', use(verifyUser), use(getUser))
+router.patch('/', use(verifyUser), use(editUser))
+router.get('/avatar', use(verifyUser), use(getUserAvatar))
+router.patch('/avatar', use(verifyUser), use(updateUserAvatar)) // TODO FOR MULTER AND CLOUDINARY
+router.delete('/avatar', use(verifyUser), use(deleteUserAvatar))
+router.use('/booking', bookingControllers)
 
 export default router.use('/user', router);
