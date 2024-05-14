@@ -7,8 +7,8 @@ import devRoutes from '@/routes/dev/dev.controllers'
 
 const api = Router();
 
-api.use('/auth', authRoutes)
 api.use('/property', propertyRoutes)
+api.use('/auth', authRoutes)
 api.use('/user', userRoutes)
 api.use('/vendor', vendorRoutes)
 

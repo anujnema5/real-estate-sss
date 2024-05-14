@@ -14,7 +14,7 @@ const getToken = (req: Request) => {
         throw new CustomError(401, 'Unauthorized request, Token not found')
     }
 
-    const decodedToken = verify(token, (process.env.USER_ACCESS_TOKEN_EXPIRY as string)) as any;
+    const decodedToken = verify(token, (process.env.USER_ACCESS_TOKEN_SECRET as string)) as any;
     return decodedToken
 }
 

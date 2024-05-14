@@ -4,6 +4,7 @@ import { Router } from "express";
 import { addImagesToProperty, createProperty, deleteProperty, editProperty, getAllProperties, getProperty } from "./property.services";
 
 const router: Router = Router()
+
 router.get('/', use(verifyVendor), use(getAllProperties))
 router.post('/', use(verifyVendor), use(createProperty))
 router.get('/:propertyId', use(verifyVendor), use(getProperty))

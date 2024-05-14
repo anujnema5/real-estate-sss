@@ -8,6 +8,8 @@ const router: Router = Router();
 
 router.get('/', use(verifyUser), use(getUser))
 router.patch('/', use(verifyUser), use(editUser))
+router.get('/account')
+router.patch('/account')
 router.get('/avatar', use(verifyUser), use(getUserAvatar))
 router.patch('/avatar', use(verifyUser), use(updateUserAvatar)) // TODO FOR MULTER AND CLOUDINARY
 router.delete('/avatar', use(verifyUser), use(deleteUserAvatar))
