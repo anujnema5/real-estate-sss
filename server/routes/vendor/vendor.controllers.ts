@@ -1,5 +1,5 @@
 import { verifyUser, verifyVendor } from "@/middlewares/verification.middleware";
-import { use } from "@/utils/responses/handleResponse";
+import { use } from "@/utils/responses/api.use";
 import { Router } from "express";
 import { createVendorService, deleteVendor, editVendor, getVendor } from "./vendor.services";
 import propertyRoutes from './property/property.controllers'

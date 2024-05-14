@@ -1,8 +1,8 @@
 import { db } from "@/db";
 import { PropertyInputSchema, PropertySchema } from "@/schema/property.schema";
 import { getVendorByUserId, getvendorById } from "@/utils/database/getEntity";
-import { CustomError } from "@/utils/responses/ApiError";
-import { ApiResponse } from "@/utils/responses/ApiResponse";
+import { CustomError } from "@/utils/responses/api.error";
+import { ApiResponse } from "@/utils/responses/api.response";
 import { UserRequest, VendorRequest } from "@/utils/types/types";
 import { Response } from "express";
 import { userInfo } from "os";

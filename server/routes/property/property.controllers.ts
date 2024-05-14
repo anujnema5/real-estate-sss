@@ -1,5 +1,5 @@
 import { userType, verifySubscription } from "@/middlewares/verification.middleware";
-import { use } from "@/utils/responses/handleResponse";
+import { use } from "@/utils/responses/api.use";
 import { Router } from "express";
 import { getNearByProperty, getPropertiesFromCity, getProperty, getRandomProperties, initiateCall } from "./property.services";
 

@@ -7,13 +7,12 @@ export const PropertySchema = z.object({
     address: z.string(),
     city: z.string(),
     state: z.string(),
-    zipcode: z.string().regex(/^\d{5}(-\d{4})?$/),
+    zipcode: z.string().regex(/^\d{6}$/),
     price: z.number().positive(),
     bedrooms: z.number().positive(),
     bathrooms: z.number().positive(),
     areaSize: z.any(),
     available: z.boolean(),
-    vendorId: z.string(),
     latitude: z.any().optional(),
     longitude : z.any().optional()
 }).refine((property) => {

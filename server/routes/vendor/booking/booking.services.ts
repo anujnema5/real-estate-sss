@@ -1,6 +1,6 @@
 import { db } from "@/db";
-import { CustomError } from "@/utils/responses/ApiError";
-import { ApiResponse } from "@/utils/responses/ApiResponse";
+import { CustomError } from "@/utils/responses/api.error";
+import { ApiResponse } from "@/utils/responses/api.response";
 import { VendorRequest } from "@/utils/types/types";
 import { Request, Response } from "express";
 

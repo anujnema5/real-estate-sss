@@ -1,5 +1,5 @@
 import { verifyVendor } from "@/middlewares/verification.middleware";
-import { use } from "@/utils/responses/handleResponse";
+import { use } from "@/utils/responses/api.use";
 import { Router } from "express";
 import { cancelBooking, confirmBooking, getAllBookings, getAllCancelledBookings, getAllConfirmedBookings, getAllPendingBookings, getBooking, getRecentBooking } from "./booking.services";
 

@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
-import { ApiError } from '@/utils/responses/ApiError';
+import { ApiError } from '@/utils/responses/api.error';
 import passport from '@/services/passport-config'
 
 export const primaryMiddlewares = (app: express.Application)=> {

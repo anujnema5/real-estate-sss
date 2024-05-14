@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { getUserById, getVendorByUserId } from "@/utils/database/getEntity";
-import { CustomError } from "@/utils/responses/ApiError";
+import { CustomError } from "@/utils/responses/api.error";
 import { UserRequest, UserSubRequest, VendorRequest, VerifySubscription } from "@/utils/types/types";
 import { Subscription, User, Vendor } from "@prisma/client";
 import { NextFunction, Request, Response } from "express"
@@ -20,7 +20,6 @@ const getToken = (req: Request) => {
 
 export const verifyUser = async (req: UserRequest, res: Response, next: NextFunction) => {
     const token = getToken(req) as any;
-
     const user = await getUserById(token.userId);
 
     if (!user) {
@@ -32,7 +31,6 @@ export const verifyUser = async (req: UserRequest, res: Response, next: NextFunc
 }
 
 export const verifyVendor = async (req: VendorRequest, res: Response, next: NextFunction) => {
-    console.log('Hey')
     const userId = getToken(req).userId as string;
 
     const user = await db.user.findUnique({ where: { id: userId }, include: { vendor: true } });

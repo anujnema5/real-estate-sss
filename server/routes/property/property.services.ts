@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { LocationSchemaType, locationSchema } from "@/schema/location.schema";
-import { CustomError } from "@/utils/responses/ApiError";
-import { ApiResponse } from "@/utils/responses/ApiResponse";
+import { CustomError } from "@/utils/responses/api.error";
+import { ApiResponse } from "@/utils/responses/api.response";
 import { UserSubRequest, VerifySubscription } from "@/utils/types/types";
 import { Property, Vendor } from "@prisma/client";
 import { Request, Response } from "express";
@@ -47,7 +47,6 @@ export const getProperty = async (req: UserSubRequest, res: Response) => {
 }
 
 export const getRandomProperties = async (req: Request, res: Response) => {
-    console.log('Heyloooo')
     const randomProperties = await db.property.findMany({
         take: 10,
         skip: Math.floor(Math.random() * 50),

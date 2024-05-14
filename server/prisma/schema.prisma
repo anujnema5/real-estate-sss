@@ -23,6 +23,7 @@ enum BookingStatus {
   confirmed
   pending
   cancelled
+  left
 }
 
 enum SubscriptionPlan {
@@ -46,6 +47,7 @@ model User {
   password      String?
   googleId      String?
   provider      String?
+  left          Boolean?      @default(false)
   phoneNumber   String?       @unique
   refreshToken  String?       @db.Text
   createdAt     DateTime      @default(now())
@@ -83,6 +85,8 @@ model Property {
   description String
   type        PropertyType
   address     String
+  building    String?
+  houseNumber String?
   city        String
   state       String
   zipcode     String
@@ -95,11 +99,11 @@ model Property {
   longitude   Float?
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
-  vendorId    String           @unique
+  vendorId    String
   vendor      Vendor           @relation(fields: [vendorId], references: [id])
   userId      String
   user        User             @relation(fields: [userId], references: [id])
-  booking     Booking?
+  booking     Booking[]
   images      PropertyImages[]
 }
 
@@ -114,21 +118,32 @@ model PropertyImages {
 
 model Booking {
   id               String        @id @default(cuid())
-  userId           String        @unique
-  propertyId       String        @unique
+  userId           String
+  propertyId       String
   checkInDate      DateTime
   checkOutDate     DateTime
   totalPrice       Float
-  status           BookingStatus
+  paid             Boolean?
+  status           BookingStatus @default(pending)
   approved         Boolean?      @default(false)
-  rejectedByUser   Boolean?
-  rejectedByVendor Boolean?
+  rejectedByUser   Boolean?      @default(false)
+  rejectedByVendor Boolean?      @default(false)
   createdAt        DateTime      @default(now())
+  leftDate         DateTime?
   updatedAt        DateTime      @updatedAt
   property         Property      @relation(fields: [propertyId], references: [id])
   user             User          @relation(fields: [userId], references: [id])
   vendorId         String        @unique
   vendor           Vendor        @relation(fields: [vendorId], references: [id])
+  review           Review[]
+}
+
+model Review {
+  id        String  @id @default(cuid())
+  content   String?
+  bookingId String
+  star      Int
+  booking   Booking @relation(fields: [bookingId], references: [id])
 }
 
 model Subscription {

@@ -1,26 +1,28 @@
 import { db } from "@/db";
 import { LoginSchema, UserSchema, loginSchema, userSchema } from "@/schema/user.schema";
-import { CustomError } from "@/utils/responses/ApiError";
+import { CustomError } from "@/utils/responses/api.error";
 import { getUserByEmail, getUserById, getUserByPhoneNumber } from "@/utils/database/getEntity";
 import { Request, Response } from "express"
 import { z } from "zod";
 import { generateAccessRefreshToken } from "@/utils/tokens/token.utils";
-import { ApiResponse } from "@/utils/responses/ApiResponse";
+import { ApiResponse } from "@/utils/responses/api.response";
 import bcrypt from 'bcryptjs';
 import { options } from "@/utils/static/cookie.utils";
 import { User } from "@prisma/client";
 import jwt from 'jsonwebtoken';
+import { BAD_REQUEST_HTTP_CODE, CONFLICT_HTTP_CODE, EMAIL_ALREADY_EXISTS, EMAIL_PHONENUMBER_REQUIRED, INCORRECT_PASSWORD, INVALID_INPUT, NON_VALID_REFERESH_TOKEN, NOT_FOUND_HTTP_CODE, OK_HTTP_CODE, REFERESH_TOKEN_NOT_FOUND, TOKEN_EXPIRE_OR_USED, TOKEN_REFERESHED, UNAUTHORIZED_HTTP_CODE } from "@/utils/constants/constants";
+import { tokenToString } from "typescript";
 
 export const signInService = async (req: Request, res: Response) => {
     const { phoneNumber, email, password } = req.body as LoginSchema;
-    const isReqBodyValid = loginSchema.safeParse({phoneNumber, email, password});
+    const isReqBodyValid = loginSchema.safeParse({ phoneNumber, email, password });
 
-    if(!isReqBodyValid.success) {
-        throw new CustomError(404, 'Fields are not valid');
+    if (!isReqBodyValid.success) {
+        throw new CustomError(BAD_REQUEST_HTTP_CODE, INVALID_INPUT);
     }
 
     if (!phoneNumber && !email) {
-        throw new CustomError(400, 'Email or phoneNumber is required for login')
+        throw new CustomError(BAD_REQUEST_HTTP_CODE, EMAIL_PHONENUMBER_REQUIRED);
     }
 
     let user: User | null = null;
@@ -32,7 +34,7 @@ export const signInService = async (req: Request, res: Response) => {
     }
 
     if (!user) {
-        throw new CustomError(401, 'Invalid email or phone number');
+        throw new CustomError(UNAUTHORIZED_HTTP_CODE, EMAIL_PHONENUMBER_REQUIRED);
     }
 
     if (password) {
@@ -40,14 +42,14 @@ export const signInService = async (req: Request, res: Response) => {
         user.password = null;
 
         if (!isValidPassword) {
-            throw new CustomError(401, 'Incorrect password');
+            throw new CustomError(UNAUTHORIZED_HTTP_CODE, INCORRECT_PASSWORD);
         }
 
         const [accessToken, refreshToken] = await generateAccessRefreshToken('user', user.id);
-        return res.status(200)
+        return res.status(OK_HTTP_CODE)
             .cookie('accessToken', accessToken, options)
             .cookie('refreshToken', refreshToken, options)
-            .json(new ApiResponse(200, { accessToken }));
+            .json(new ApiResponse(OK_HTTP_CODE, { accessToken }));
     }
 
     // MORE CODE TO BE SETUP FOR OTP
@@ -60,13 +62,13 @@ export const signUpService = async (req: Request, res: Response) => {
 
     // Check if user data is valid; if not, throw an error
     if (!isUserValid.success) {
-        throw new CustomError(404, 'Fields are not valid');
+        throw new CustomError(BAD_REQUEST_HTTP_CODE, INVALID_INPUT);
     }
 
     // Check if a user with the same email already exists
     const existingUser = await getUserByEmail(user.email);
     if (existingUser) {
-        throw new CustomError(409, 'User with this email already exists');
+        throw new CustomError(CONFLICT_HTTP_CODE, EMAIL_ALREADY_EXISTS);
     }
 
     // hashed user password
@@ -93,30 +95,29 @@ export const signUpService = async (req: Request, res: Response) => {
 export const refreshToken = async (req: Request, res: Response) => {
     const incomingrefreshToken = req.body.refreshToken || req.cookies.refreshToken
 
-
     if (!incomingrefreshToken) {
-        throw new CustomError(401, "No refresh token found")
+        throw new CustomError(UNAUTHORIZED_HTTP_CODE, REFERESH_TOKEN_NOT_FOUND)
     }
 
     const decodedToken = jwt.verify(incomingrefreshToken, (process.env.USER_REFRESH_TOKEN_SECRET as string)) as any
 
     if (!decodedToken) {
-        throw new CustomError(401, "non-valid refresh token")
+        throw new CustomError(UNAUTHORIZED_HTTP_CODE, NON_VALID_REFERESH_TOKEN)
     }
 
-    const foundUser = await getUserById(decodedToken.userId) as any;
+    const foundUser = await getUserById(decodedToken.userId, { includeReferesh: true }) as any;
 
     if (foundUser?.refreshToken !== incomingrefreshToken) {
-        throw new CustomError(401, "Token expired or already been used")
+        throw new CustomError(UNAUTHORIZED_HTTP_CODE, TOKEN_EXPIRE_OR_USED)
     }
 
     const [accessToken, refreshToken] = await generateAccessRefreshToken('user', foundUser) as any
 
     return res
-        .status(200)
+        .status(OK_HTTP_CODE)
         .cookie("accessToken", accessToken, options)
         .cookie("refreshToken", refreshToken, options)
-        .json(new ApiResponse(200, accessToken, "Token refreshed"))
+        .json(new ApiResponse(OK_HTTP_CODE, accessToken, TOKEN_REFERESHED))
 }
 
 export const googleCallback = async (req: any, res: Response) => {

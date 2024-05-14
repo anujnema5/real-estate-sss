@@ -1,14 +1,15 @@
 import { verifyUser } from "@/middlewares/verification.middleware";
-import { use } from "@/utils/responses/handleResponse";
+import { use } from "@/utils/responses/api.use";
 import { Router } from "express";
-import { createBooking, getBooking, getBookingStatus, getBookings, getCancelledBooking, getPendingBookings, getRecentUser, getSuccessBookings } from "./booking.services";
+import { cancelBooking, createBooking, getBooking, getBookingStatus, getBookings, getCancelledBooking, getPendingBookings, getRecentUser, getSuccessBookings } from "./booking.services";
 
 const router: Router = Router()
 
-router.post('/', use(verifyUser), use(createBooking))
 router.get('/', use(verifyUser), use(getBookings))
-router.get(':/bookingId', use(verifyUser), use(getBooking))
-router.get('/:bookingId/status', use(verifyUser), use(getBookingStatus))
+router.post('/', use(verifyUser), use(createBooking, { reqBody: true }))
+// router.post('/:bookingId/cancel', use(verifyUser), use(cancelBooking))
+// router.get(':/bookingId', use(verifyUser), use(getBooking))
+// router.get('/:bookingId/status', use(verifyUser), use(getBookingStatus))
 router.get('/cofirmed', use(verifyUser), use(getSuccessBookings))
 router.get('/pending', use(verifyUser), use(getPendingBookings))
 router.get('/cancelled', use(verifyUser), use(getCancelledBooking))
