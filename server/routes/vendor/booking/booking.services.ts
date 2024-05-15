@@ -23,7 +23,7 @@ export const confirmBooking = async (req: VendorRequest, res: Response) => {
 
     const updatedBooking = await db.booking.update({
         where: { id: bookingId, vendorId },
-        data: { status: 'confirmed', approved: true }
+        data: { status: 'confirmed', approved: true, paid: true }
     })
 
     return res.status(200).json(new ApiResponse(200, updatedBooking, 'Booking Confirmed Success'));

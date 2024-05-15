@@ -6,7 +6,6 @@ import { ApiResponse } from "@/utils/responses/api.response";
 import { UserRequest } from "@/utils/types/types";
 import { Response } from "express";
 
-
 export const getAccount = async (req: UserRequest, res: Response)=> {
     const userId = req.user.id;
     const account = await getAccountByUserId(userId);

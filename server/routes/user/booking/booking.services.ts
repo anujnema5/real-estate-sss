@@ -1,17 +1,65 @@
 import { db } from "@/db";
-import { BAD_REQUEST_HTTP_CODE, BOOKING_ALREADY_REJECTED_BY_VENDOR, BOOKING_CANCALLED_SUCCESS, BOOKING_CREATED_SUCCESS, BOOKING_NOT_FOUND, CONFLICT_HTTP_CODE, NOT_FOUND_HTTP_CODE, OK_HTTP_CODE } from "@/utils/constants/constants";
+import '@/utils/logic/unixTimestamp'
+import { bookingInputSchema } from "@/schema/booking.schema";
+import { BAD_REQUEST_HTTP_CODE, BOOKING_ALREADY_EXIST, BOOKING_ALREADY_REJECTED_BY_VENDOR, BOOKING_CANCALLED_SUCCESS, BOOKING_CREATED_SUCCESS, BOOKING_NOT_FOUND, CONFLICTING_THE_VENDOR_AND_PROPERTYID, CONFLICT_HTTP_CODE, INVALID_INPUT, NOT_FOUND_HTTP_CODE, OK_HTTP_CODE } from "@/utils/constants/constants";
 import { getBookingById } from "@/utils/database/getEntity";
 import { CustomError } from "@/utils/responses/api.error";
 import { ApiResponse } from "@/utils/responses/api.response";
 import { UserRequest } from "@/utils/types/types";
 import { Request, Response } from "express";
+import { Booking } from "@prisma/client";
 
 export const createBooking = async (req: UserRequest, res: Response) => {
-    const userID = req.user.id;
+    const userId = req.user.id;
+    const propertyId = req.params.propertyId;
     const { vendorId } = req.body || req.query.vendorId;
-
     const bookingDetails = req.body;
-    const newBooking = await db.booking.create({ data: { ...bookingDetails, vendorId, userID } })
+
+    const { success, data, error } = bookingInputSchema.safeParse(bookingDetails)
+
+    console.log(data)
+
+    if (!success) {
+        console.log(error)
+        throw new CustomError(BAD_REQUEST_HTTP_CODE, `${INVALID_INPUT}`)
+    }
+
+    const propertyCheck = await db.property.findUnique({ where: { id: propertyId, vendorId } })
+
+    if (!propertyCheck) {
+        throw new CustomError(CONFLICT_HTTP_CODE, CONFLICTING_THE_VENDOR_AND_PROPERTYID)
+    }
+
+    const existingBooking = await db.booking.findFirst({
+        where: { vendorId, userId, propertyId }
+    }) as any;
+
+    // IF USER BOOKING ALREADY IS NOT IN CONFIRMED STATE AND STILL HE/SHE
+    // MAKING BOOKING THEN WE SHOULD NOT ACCEPT THAT BOOKING
+    // if (existingBooking && existingBooking.status !== 'confirmed') {
+    //     throw new CustomError(CONFLICT_HTTP_CODE, BOOKING_ALREADY_EXIST)
+    // }
+
+    if (existingBooking && existingBooking.checkInDate >= bookingDetails.checkInDate) {
+        throw new CustomError(CONFLICT_HTTP_CODE, BOOKING_ALREADY_EXIST)
+    }
+
+    // SUPPOSE IF USER BOOKING IS CONFIRMED AND STILL 
+    if (
+        existingBooking
+        && existingBooking.checkInDate.toUnixTimestamp() >=
+        new Date(bookingDetails.checkInDate)
+        || existingBooking.checkOutDate.toUnixTimestamp() >
+        new Date(bookingDetails.checkInDate).toUnixTimestamp()
+    ) {
+        throw new CustomError(CONFLICT_HTTP_CODE, BOOKING_ALREADY_EXIST)
+    }
+
+    const newBooking = await db.booking.create({
+        data: {
+            ...bookingDetails, vendorId, userId, propertyId
+        }
+    })
 
     return res.status(OK_HTTP_CODE).json(new ApiResponse(OK_HTTP_CODE, newBooking, BOOKING_CREATED_SUCCESS))
 }
@@ -103,9 +151,10 @@ export const getCancelledBooking = async (req: UserRequest, res: Response) => {
     return res.status(200).json(new ApiResponse(200, caneclledBookings));
 }
 
-export const getRecentUser = async (req: UserRequest, res: Response) => {
+export const getRecentBooking = async (req: UserRequest, res: Response) => {
     const userId = req.user.id;
 
-    const recentBooking = await db.booking.findFirst({ orderBy: { createdAt: 'desc' }, where: { userId } });
+    console.log('Hey')
+    const recentBooking = await db.booking.findFirst({ where: { userId } });
     return res.status(200).json(new ApiResponse(200, recentBooking));
 }

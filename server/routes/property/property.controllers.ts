@@ -9,6 +9,5 @@ router.get('/', use(getRandomProperties))
 router.get('/:city', use(getPropertiesFromCity))
 router.get('/nearby-properties', use(getNearByProperty))
 router.get('/:propertyId', use(userType), use(getProperty))
-router.post('/:propertyId/call', use(verifySubscription), use(initiateCall))
 
 export default router

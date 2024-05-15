@@ -103,4 +103,7 @@ export const UNEXPECTED_ERROR = "An unexpected error occurred.";
 /* APP Specific messages */
 export const BOOKING_CANCALLED_SUCCESS = "Booking cancelled successfully.";
 export const BOOKING_ALREADY_REJECTED_BY_VENDOR = "Booking is already rejected by vendor."
+export const BOOKING_ALREADY_EXIST = "Booking already exist."
 export const BOOKING_CREATED_SUCCESS = "Booking created successfully."
+export const CONFLICTING_THE_RECORD = "You are conflicting the record"
+export const CONFLICTING_THE_VENDOR_AND_PROPERTYID = "You are conflicting vendor and propertyId"
