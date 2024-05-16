@@ -10,7 +10,7 @@ import bcrypt from 'bcryptjs';
 import { options } from "@/utils/static/cookie.utils";
 import { User } from "@prisma/client";
 import jwt from 'jsonwebtoken';
-import { BAD_REQUEST_HTTP_CODE, CONFLICT_HTTP_CODE, EMAIL_ALREADY_EXISTS, EMAIL_PHONENUMBER_REQUIRED, INCORRECT_PASSWORD, INVALID_INPUT, NON_VALID_REFERESH_TOKEN, NOT_FOUND_HTTP_CODE, OK_HTTP_CODE, REFERESH_TOKEN_NOT_FOUND, TOKEN_EXPIRE_OR_USED, TOKEN_REFERESHED, UNAUTHORIZED_HTTP_CODE } from "@/utils/constants/constants";
+import { BAD_REQUEST_HTTP_CODE, BLOCKED_ACCOUNT, CONFLICT_HTTP_CODE, EMAIL_ALREADY_EXISTS, EMAIL_PHONENUMBER_REQUIRED, INCORRECT_PASSWORD, INVALID_INPUT, NON_VALID_REFERESH_TOKEN, NOT_FOUND_HTTP_CODE, OK_HTTP_CODE, REFERESH_TOKEN_NOT_FOUND, TOKEN_EXPIRE_OR_USED, TOKEN_REFERESHED, UNAUTHORIZED_HTTP_CODE } from "@/utils/constants/constants";
 import { tokenToString } from "typescript";
 
 export const signInService = async (req: Request, res: Response) => {
@@ -35,6 +35,10 @@ export const signInService = async (req: Request, res: Response) => {
 
     if (!user) {
         throw new CustomError(UNAUTHORIZED_HTTP_CODE, EMAIL_PHONENUMBER_REQUIRED);
+    }
+
+    if(user.blocked) {
+        throw new CustomError(UNAUTHORIZED_HTTP_CODE, BLOCKED_ACCOUNT)
     }
 
     if (password) {

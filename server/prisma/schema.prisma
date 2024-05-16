@@ -1,7 +1,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["omitApi"]
 }
 
 datasource db {
@@ -17,6 +18,11 @@ enum PropertyType {
   single
   library
   mess
+}
+
+enum roles {
+  admin
+  employee
 }
 
 enum BookingStatus {
@@ -52,6 +58,7 @@ model User {
   refreshToken  String?       @db.Text
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
+  blocked       Boolean       @default(false)
   account       Account?
   vendor        Vendor?
   booking       Booking[]
@@ -118,25 +125,33 @@ model PropertyImages {
   property   Property @relation(fields: [propertyId], references: [id])
 }
 
+model Admin {
+  id            String  @id @default(cuid())
+  username      String  @unique
+  email         String  @unique
+  password      String
+  refereshToken String? @db.Text
+}
+
 model Booking {
-  id               String        @id @default(cuid())
+  id               String         @id @default(cuid())
   userId           String
   propertyId       String
-  vendorId         String        
+  vendorId         String
   checkInDate      DateTime
   checkOutDate     DateTime?
   totalPrice       Float
   paid             Boolean?
   status           BookingStatus? @default(pending)
-  approved         Boolean?      @default(false)
-  rejectedByUser   Boolean?      @default(false)
-  rejectedByVendor Boolean?      @default(false)
-  createdAt        DateTime      @default(now())
+  approved         Boolean?       @default(false)
+  rejectedByUser   Boolean?       @default(false)
+  rejectedByVendor Boolean?       @default(false)
+  createdAt        DateTime       @default(now())
   leftDate         DateTime?
   updatedAt        DateTime?      @updatedAt
-  user             User          @relation(fields: [userId], references: [id])
-  property         Property      @relation(fields: [propertyId], references: [id])
-  vendor           Vendor        @relation(fields: [vendorId], references: [id])
+  user             User           @relation(fields: [userId], references: [id])
+  property         Property       @relation(fields: [propertyId], references: [id])
+  vendor           Vendor         @relation(fields: [vendorId], references: [id])
   review           Review[]
 }
 

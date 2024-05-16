@@ -1,20 +1,20 @@
 import { db } from "@/db";
+import { ADMIN_NOT_FOUND, NOT_FOUND_HTTP_CODE, USER_NOT_FOUND } from "@/utils/constants/constants";
 import { getUserById, getVendorByUserId } from "@/utils/database/getEntity";
 import { CustomError } from "@/utils/responses/api.error";
-import { UserRequest, UserSubRequest, VendorRequest, VerifySubscription } from "@/utils/types/types";
-import { Subscription, User, Vendor } from "@prisma/client";
+import { AdminRequest, UserRequest, UserSubRequest, VendorRequest, VerifySubscription } from "@/utils/types/types";
+import { Admin, Subscription, User, Vendor } from "@prisma/client";
 import { NextFunction, Request, Response } from "express"
 import { verify } from "jsonwebtoken";
 
-const getToken = (req: Request) => {
+const getToken = (req: Request, { admin }: { admin?: boolean } = { admin: false }) => {
     const token = req.header("Authorization")?.replace("Bearer ", "") || req.cookies.accessToken;
-    console.log(token)
 
     if (!token) {
         throw new CustomError(401, 'Unauthorized request, Token not found')
     }
 
-    const decodedToken = verify(token, (process.env.USER_ACCESS_TOKEN_SECRET as string)) as any;
+    const decodedToken = verify(token, (admin ? (process.env.ADMIN_ACCESS_TOKEN as string) : process.env.USER_ACCESS_TOKEN_SECRET as string)) as any;
     return decodedToken
 }
 
@@ -95,7 +95,7 @@ export const userType = async (req: UserSubRequest, res: Response, next: NextFun
     const subscription = user?.subscription || null;
 
     if (!user) {
-        throw new CustomError(404, 'User not found');
+        throw new CustomError(NOT_FOUND_HTTP_CODE, USER_NOT_FOUND);
     }
 
     req.user = user;
@@ -105,3 +105,22 @@ export const userType = async (req: UserSubRequest, res: Response, next: NextFun
     req.subscription = subscription;
     next();
 };
+
+export const verifyAdmin = async (req: AdminRequest, res: Response, next: NextFunction) => {
+    const adminId = getToken(req).adminId;
+
+    const admin = await db.admin.findUnique({where: {id: adminId}, select: {
+        id: true,
+        email: true,
+        username: true,
+        password: false,
+        refereshToken: false
+    }}) as Admin;
+
+    if(!admin) {
+        throw new CustomError(NOT_FOUND_HTTP_CODE, ADMIN_NOT_FOUND);
+    }
+
+    req.admin = admin;
+    next();
+}

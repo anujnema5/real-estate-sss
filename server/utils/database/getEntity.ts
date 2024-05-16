@@ -24,6 +24,18 @@ export const getVendorByUserId = async (userId: string) => {
     return await db.vendor.findUnique({ where: { userId } });
 }
 
+export const getAdminById = async (id: string)=> {
+    return await db.admin.findUnique({where: {id}});
+}
+
+export const getAdminByEmail = async (email: string)=> {
+    return await db.admin.findUnique({where: {email}})
+}
+
+export const getAdminByUsername = async (username: string)=> {
+    return await db.admin.findUnique({where: {username}})
+}
+
 export const getBookingById = async (id: string)=> {
     return await db.booking.findUnique({where: {id}})
 }

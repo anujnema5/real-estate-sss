@@ -6,6 +6,8 @@ export const EMAIL_NOT_FOUND = "Email can't be empty.";
 export const GENDER_NOT_FOUND = "Gender can't be empty.";
 export const PASSWORD_NOT_FOUND = "Password can't be empty.";
 export const USER_NOT_FOUND = "User does not exist.";
+export const ADMIN_NOT_FOUND = "Admin not found"
+export const ADMIN_ALREADY_EXIST = "Admin already exist"
 
 /* General Errors constants */
 export const ROUTE_NOT_FOUND = "You are at the wrong place.";
@@ -90,6 +92,9 @@ export const INCORRECT_PASSWORD = "Incorrect Password"
 export const PASSWORD_TOO_WEAK = "Password is too weak.";
 export const EMAIL_PASSWORD_REQUIRED  = "Email and Password required for login"
 export const EMAIL_PHONENUMBER_REQUIRED  = "Invalid email and phone number"
+export const USERNAME_OR_EMAIL_REQUIRED = "Username or email is required."
+export const COULDNT_FOUND_YOU_ACCOUNT = "couldn't found your account"
+export const BLOCKED_ACCOUNT = "Sorry your account is blocked"
 
 /* General messages */
 export const PAGE_NOT_FOUND = "Page not found.";

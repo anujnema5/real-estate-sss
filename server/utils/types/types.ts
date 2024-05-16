@@ -1,4 +1,4 @@
-import { Subscription, User, Vendor } from "@prisma/client";
+import { Admin, Subscription, User, Vendor } from "@prisma/client";
 import { Request } from "express";
 
 export interface UserRequest extends Request {
@@ -21,4 +21,8 @@ export interface UserSubRequest extends Request {
     vendor: Vendor | null
     subscription: Subscription | null
     subscriber: Boolean
+}
+
+export interface AdminRequest extends Request {
+    admin : Admin
 }
