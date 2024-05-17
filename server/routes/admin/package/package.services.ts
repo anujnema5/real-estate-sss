@@ -39,7 +39,8 @@ export const createPackage =
 
 export const getPackages =
     async (req: AdminRequest, res: Response) => {
-
+        const packages = await db.package.findMany();
+        return res.status(OK_HTTP_CODE).json(new ApiResponse(OK_HTTP_CODE, packages));
     }
 
 export const getPackage =
@@ -55,7 +56,7 @@ export const getPackage =
         if (!onePackage) {
             throw new CustomError(NOT_FOUND_HTTP_CODE, PACKAGE_NOT_FOUND);
         }
-
+        
         return res.status(OK_HTTP_CODE).json(new ApiResponse(OK_HTTP_CODE, onePackage))
     }
 

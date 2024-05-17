@@ -5,6 +5,18 @@ import { ApiResponse } from "@/utils/responses/api.response";
 import { AdminRequest } from "@/utils/types/types";
 import { Response } from "express";
 
+const isUserExist = async (req: AdminRequest)=> {
+    const userId = req.params.userId;
+
+    const existingUser = await db.user.findUnique({
+        where: { id: userId }
+    })
+
+    if (!existingUser) {
+        throw new CustomError(NOT_FOUND_HTTP_CODE, USER_NOT_FOUND)
+    }
+}
+
 export const getAllUsers = async (req: AdminRequest, res: Response) => {
     const users = await db.user.findMany({
         omit: {
@@ -116,6 +128,11 @@ export const usersWithVendor = async (req: AdminRequest, res: Response) => {
             }
         },
 
+        omit: {
+            password: true,
+            refreshToken: true
+        },
+
         include: {
             account: true,
             vendor: true,
@@ -126,19 +143,24 @@ export const usersWithVendor = async (req: AdminRequest, res: Response) => {
 }
 
 export const blockUser = async (req: AdminRequest, res: Response) => {
+    await isUserExist(req);
     const userId = req.params.userId;
-
-    const existingUser = await db.user.findUnique({
-        where: { id: userId }
-    })
-
-    if (!existingUser) {
-        throw new CustomError(NOT_FOUND_HTTP_CODE, USER_NOT_FOUND)
-    }
 
     const blockedUser = await db.user.update({
         data: { blocked: true }, where: { id: userId }
     })
 
     return res.status(OK_HTTP_CODE).json(new ApiResponse(OK_HTTP_CODE, blockedUser));
+}
+
+export const unblockUser = async (req: AdminRequest, res: Response)=> {
+    await isUserExist(req);
+    
+    const userId = req.params.userId;
+
+    const unBlockedUser = await db.user.update({
+        data: { blocked: false }, where: { id: userId }
+    })
+
+    return res.status(OK_HTTP_CODE).json(new ApiResponse(OK_HTTP_CODE, unBlockedUser));
 }

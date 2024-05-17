@@ -10,7 +10,8 @@ export const VENDOR_NOT_FOUND = "Vendor not found"
 export const ADMIN_NOT_FOUND = "Admin not found"
 export const SUBSCRIPTION_NOT_FOUND = "Subscription not found"
 export const PACKAGE_NOT_FOUND = "Package not found";
-export const ADMIN_ALREADY_EXIST = "Admin already exist"
+export const ADMIN_ALREADY_EXIST = "Admin already exist";
+export const SOMETHING_WENT_WRONG_GENERATING_TOKEN = "Something went wrong while generating the token."
 
 /* General Errors constants */
 export const ROUTE_NOT_FOUND = "You are at the wrong place.";

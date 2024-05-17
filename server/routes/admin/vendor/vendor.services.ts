@@ -6,7 +6,13 @@ import { AdminRequest } from "@/utils/types/types";
 import { Response } from "express";
 
 export const getVendors = async (req: AdminRequest, res: Response) => {
-    const vendors = await db.vendor.findMany();
+    const vendors = await db.vendor.findMany({
+        include: {
+            user:
+                { omit: { password: true, refreshToken: true } }
+        }
+    });
+
     return res.status(OK_HTTP_CODE).json(new ApiResponse(OK_HTTP_CODE, vendors));
 }
 
@@ -14,7 +20,15 @@ export const getVendor = async (req: AdminRequest, res: Response) => {
     const vendorId = req.params.vendorId;
 
     const existingVendor = await db.vendor.findUnique({
-        where: { id: vendorId }
+        where: { id: vendorId },
+        include: {
+            user: {
+                omit: {
+                    password: true,
+                    refreshToken: true
+                }
+            }
+        }
     })
 
     if (!existingVendor) {

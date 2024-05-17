@@ -15,6 +15,17 @@ enum PropertyType {
     "mess"
 }
 
+const isPropertyExist = async (req: AdminRequest) => {
+    const propertyId = req.params.propertyId;
+    const isPropertyExist = await db.property.findUnique({ where: { id: propertyId } });
+
+    if (!isPropertyExist) {
+        throw new CustomError(NOT_FOUND_HTTP_CODE, PROPERTY_DONT_EXIST)
+    }
+
+    return isPropertyExist
+}
+
 export const getAllProperties = async (req: AdminRequest, res: Response) => {
     const properties = await db.property.findMany();
     return res.status(OK_HTTP_CODE).json(new ApiResponse(OK_HTTP_CODE, properties))
@@ -88,7 +99,7 @@ export const deleteProperty = async (req: AdminRequest, res: Response) => {
 }
 
 export const getPropertyWithType = async (req: AdminRequest, res: Response) => {
-    const propertyType = req.params.propertyType as unknown as any ;
+    const propertyType = req.params.propertyType as unknown as any;
 
     const properties = await db.property.findMany({
         where: {
@@ -100,7 +111,7 @@ export const getPropertyWithType = async (req: AdminRequest, res: Response) => {
 }
 
 export const getAvailablePropertyWithType = async (req: AdminRequest, res: Response) => {
-    const propertyType = req.params.propertyType as unknown as any ;
+    const propertyType = req.params.propertyType as unknown as any;
 
     const properties = await db.property.findMany({
         where: {
@@ -110,3 +121,9 @@ export const getAvailablePropertyWithType = async (req: AdminRequest, res: Respo
 
     return res.status(OK_HTTP_CODE).json(new ApiResponse(OK_HTTP_CODE, properties));
 }
+
+export const getProperty =
+    async (req: AdminRequest, res: Response) => {
+        const property = await isPropertyExist(req);
+        return res.status(OK_HTTP_CODE).json(new ApiResponse(OK_HTTP_CODE, property));
+    }

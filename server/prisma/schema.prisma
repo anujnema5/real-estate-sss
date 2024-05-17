@@ -130,7 +130,7 @@ model Admin {
   username      String  @unique
   email         String  @unique
   password      String
-  refereshToken String? @db.Text
+  refreshToken String? @db.Text
 }
 
 model Booking {

@@ -3,6 +3,7 @@ import { getAdminById, getUserByEmail, getUserById, getvendorById } from "../dat
 import { Admin, User, Vendor } from "@prisma/client";
 import jwt from 'jsonwebtoken';
 import { CustomError, getStatusCodeFromError } from "../responses/api.error";
+import { SOMETHING_WENT_WRONG_GENERATING_TOKEN } from "../constants/constants";
 
 type EntityType = 'user' | 'admin';
 type Entity = User | Admin;
@@ -29,11 +30,11 @@ export const generateAccessRefreshToken = async (entityType: EntityType, id: str
     catch (error: unknown) {
         console.log(error);
         const statusCode = getStatusCodeFromError(error)
-        throw new CustomError(statusCode, 'Something went wrong while generating the token');
+        throw new CustomError(statusCode, SOMETHING_WENT_WRONG_GENERATING_TOKEN);
     }
 }
 
-const generateAccessToken = (entityType: EntityType, entity: User | Vendor) => {
+const generateAccessToken = (entityType: EntityType, entity: User | Admin) => {
 
     if (entityType === 'user') {
         return generateToken(
@@ -52,7 +53,7 @@ const generateAccessToken = (entityType: EntityType, entity: User | Vendor) => {
     }
 }
 
-const generateRefreshToken = (entityType: EntityType, entity: User | Vendor) => {
+const generateRefreshToken = (entityType: EntityType, entity: User | Admin) => {
 
     if (entityType === 'user') {
         return generateToken(
@@ -64,7 +65,7 @@ const generateRefreshToken = (entityType: EntityType, entity: User | Vendor) => 
 
     else if (entityType === 'admin') {
         return generateToken(
-            { vendorId: entity.id },
+            { adminId: entity.id },
             process.env.ADMIN_REFERESH_TOKEN_SECRET as string,
             process.env.ADMIN_REFERESH_TOKEN_EXPIRY as string
         ) as string

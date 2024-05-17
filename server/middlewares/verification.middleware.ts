@@ -14,7 +14,7 @@ const getToken = (req: Request, { admin }: { admin?: boolean } = { admin: false 
         throw new CustomError(401, 'Unauthorized request, Token not found')
     }
 
-    const decodedToken = verify(token, (admin ? (process.env.ADMIN_ACCESS_TOKEN as string) : process.env.USER_ACCESS_TOKEN_SECRET as string)) as any;
+    const decodedToken = verify(token, (admin ? (process.env.ADMIN_ACCESS_TOKEN_SECRET as string) : process.env.USER_ACCESS_TOKEN_SECRET as string)) as any;
     return decodedToken
 }
 
@@ -107,17 +107,14 @@ export const userType = async (req: UserSubRequest, res: Response, next: NextFun
 };
 
 export const verifyAdmin = async (req: AdminRequest, res: Response, next: NextFunction) => {
-    const adminId = getToken(req).adminId;
+    const adminId = getToken(req, { admin: true })?.adminId;
 
-    const admin = await db.admin.findUnique({where: {id: adminId}, select: {
-        id: true,
-        email: true,
-        username: true,
-        password: false,
-        refereshToken: false
-    }}) as Admin;
+    const admin = await db.admin.findUnique({
+        where: { id: adminId },
+        omit: { password: true, refreshToken: true }
+    }) as Admin;
 
-    if(!admin) {
+    if (!admin) {
         throw new CustomError(NOT_FOUND_HTTP_CODE, ADMIN_NOT_FOUND);
     }
 

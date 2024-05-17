@@ -1,7 +1,7 @@
 import { verifyAdmin } from "@/middlewares/verification.middleware";
 import { use } from "@/utils/responses/api.use";
 import { Router } from "express";
-import { deleteProperty, getAllAvailableProperties, getAllProperties, getAllUnavailableProperties, getAvailablePropertyWithType, getPropertyWithType, markAvailabilityDisable, markAvailabilityEnable } from "./property.services";
+import { deleteProperty, getAllAvailableProperties, getAllProperties, getAllUnavailableProperties, getAvailablePropertyWithType, getProperty, getPropertyWithType, markAvailabilityDisable, markAvailabilityEnable } from "./property.services";
 
 const router : Router = Router()
 
@@ -15,5 +15,7 @@ router.get('/type/:propertyType/available', use(verifyAdmin), use(getAvailablePr
 router.patch('/:propertyId/unavailable', use(verifyAdmin), use(markAvailabilityEnable))
 router.patch('/:propertyId/available', use(verifyAdmin), use(markAvailabilityDisable))
 
+router.get('/:propertyId', use(verifyAdmin), use(getProperty))
 router.delete('/:propertyId', use(verifyAdmin), use(deleteProperty))
+
 export default router;

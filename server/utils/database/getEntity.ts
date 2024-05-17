@@ -24,24 +24,28 @@ export const getVendorByUserId = async (userId: string) => {
     return await db.vendor.findUnique({ where: { userId } });
 }
 
-export const getAdminById = async (id: string)=> {
-    return await db.admin.findUnique({where: {id}});
+export const getAdminById = async (id: string) => {
+    return await db.admin.findUnique({
+        where: { id }, omit: {
+            refreshToken: false
+        }
+    });
 }
 
-export const getAdminByEmail = async (email: string)=> {
-    return await db.admin.findUnique({where: {email}})
+export const getAdminByEmail = async (email: string) => {
+    return await db.admin.findUnique({where: { email }})
 }
 
-export const getAdminByUsername = async (username: string)=> {
-    return await db.admin.findUnique({where: {username}})
+export const getAdminByUsername = async (username: string) => {
+    return await db.admin.findUnique({ where: { username }})
 }
 
-export const getBookingById = async (id: string)=> {
-    return await db.booking.findUnique({where: {id}})
+export const getBookingById = async (id: string) => {
+    return await db.booking.findUnique({ where: { id } })
 }
 
-export const getAccountByUserId = async (userId: string)=> {
-    return await db.account.findUnique({where: {userId}})
+export const getAccountByUserId = async (userId: string) => {
+    return await db.account.findUnique({ where: { userId } })
 }
 
 export const getvendorByEmail = async (email: string, { password }: { password: boolean }) => {
@@ -71,7 +75,7 @@ export const getEntityByField = async (entity: 'user' | 'vendor', fields: any, v
 }
 
 export const getAnyByField = async (any: any, field: any, value: any, include?: any) => {
-    const result =  await((db[any] as any).findUnique as any)({
+    const result = await ((db[any] as any).findUnique as any)({
         where: ({
             [field]: value
         } as any)

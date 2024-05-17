@@ -1,5 +1,6 @@
 import { db } from '@/db';
 import { getUserByEmail } from '@/utils/database/getEntity';
+import { User } from '@prisma/client';
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
 
@@ -17,9 +18,14 @@ passport.use(new GoogleStrategy({
         const email = emails?.[0].value as string;
 
         // checking existing user
-        const existinUser = await getUserByEmail(email);
+        const existinUser = await getUserByEmail(email) as User;
 
         if (existinUser) {
+            
+            if (existinUser.blocked) {
+                return cb(null, false);
+            }
+
             if (!existinUser.emailVerified) {
                 const verifiedUser = await db.user.update({
                     where: { email },
