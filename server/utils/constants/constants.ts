@@ -6,7 +6,10 @@ export const EMAIL_NOT_FOUND = "Email can't be empty.";
 export const GENDER_NOT_FOUND = "Gender can't be empty.";
 export const PASSWORD_NOT_FOUND = "Password can't be empty.";
 export const USER_NOT_FOUND = "User does not exist.";
+export const VENDOR_NOT_FOUND = "Vendor not found"
 export const ADMIN_NOT_FOUND = "Admin not found"
+export const SUBSCRIPTION_NOT_FOUND = "Subscription not found"
+export const PACKAGE_NOT_FOUND = "Package not found";
 export const ADMIN_ALREADY_EXIST = "Admin already exist"
 
 /* General Errors constants */
@@ -112,3 +115,4 @@ export const BOOKING_ALREADY_EXIST = "Booking already exist."
 export const BOOKING_CREATED_SUCCESS = "Booking created successfully."
 export const CONFLICTING_THE_RECORD = "You are conflicting the record"
 export const CONFLICTING_THE_VENDOR_AND_PROPERTYID = "You are conflicting vendor and propertyId"
+export const PROPERTY_DONT_EXIST = "property does not exist";

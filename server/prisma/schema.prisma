@@ -163,14 +163,21 @@ model Review {
   booking   Booking @relation(fields: [bookingId], references: [id])
 }
 
+model Package {
+  id           String           @id @default(cuid())
+  plan         SubscriptionPlan
+  price        Int
+  subscription Subscription[]
+}
+
 model Subscription {
   id        String             @id @default(cuid())
-  plan      SubscriptionPlan
-  price     Int
   userId    String             @unique
   user      User               @relation(fields: [userId], references: [id])
   duration  Int
   status    SubscriptionStatus @default(inactive)
+  packageId String
+  package   Package            @relation(fields: [packageId], references: [id])
   createdAt DateTime           @default(now())
   isExpired Boolean            @default(false)
   updatedAt DateTime           @updatedAt

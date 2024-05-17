@@ -35,7 +35,7 @@ export const signIn = async (req: Request, res: Response) => {
         throw new CustomError(BAD_REQUEST_HTTP_CODE, COULDNT_FOUND_YOU_ACCOUNT)
     }
 
-    const isValidPassword = await compare(data.password, admin?.password)
+    const isValidPassword: boolean = await compare(data.password, admin?.password)
 
     if (!isValidPassword) {
         throw new CustomError(UNAUTHORIZED_HTTP_CODE, INCORRECT_PASSWORD)

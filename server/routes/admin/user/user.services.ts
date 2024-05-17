@@ -36,12 +36,17 @@ export const getSubscribedUsers = async (req: AdminRequest, res: Response) => {
 
         where: {
             subscription: {
-                status: 'active'
+                status: 'active',
+                isExpired: false
             }
         },
 
         include: {
-            subscription: true
+            subscription: {
+                include: {
+                    package: true
+                }
+            }
         }
     })
 
