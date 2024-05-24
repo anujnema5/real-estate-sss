@@ -80,7 +80,7 @@ export const signUpService = async (req: Request, res: Response) => {
 
     // create new user and with the userID new account
     const [newUser, newAccount] = await db.$transaction(async (prisma) => {
-        const createdUser = await prisma.user.create({ data: { ...user, password: hashedPassword } });
+        const createdUser = await prisma.user.create({ data: { ...user, password: hashedPassword, provider: 'credentials' } });
         const createdAccount = await prisma.account.create({ data: { userId: createdUser.id } });
 
         createdUser.password = null;

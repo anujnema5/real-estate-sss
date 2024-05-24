@@ -5,7 +5,7 @@ import { ApiResponse } from "@/utils/responses/api.response";
 import { AdminRequest } from "@/utils/types/types";
 import { Response } from "express";
 
-const isUserExist = async (req: AdminRequest)=> {
+const isUserExist = async (req: AdminRequest) => {
     const userId = req.params.userId;
 
     const existingUser = await db.user.findUnique({
@@ -22,6 +22,10 @@ export const getAllUsers = async (req: AdminRequest, res: Response) => {
         omit: {
             refreshToken: true,
             password: true
+        },
+
+        include: {
+            vendor: true
         }
     });
 
@@ -30,7 +34,20 @@ export const getAllUsers = async (req: AdminRequest, res: Response) => {
 
 export const getUser = async (req: AdminRequest, res: Response) => {
     const userId = req.params.userId;
-    const user = await db.user.findUnique({ where: { id: userId } });
+    const user = await db.user.findUnique(
+        {
+            where: {
+                id:userId
+            },
+            include: {
+                account: true,
+                vendor: true,
+                booking: true,
+                leads: true,
+                property: true,
+                subscription: true
+            }
+        });
 
     if (!user) {
         throw new CustomError(NOT_FOUND_HTTP_CODE, USER_NOT_FOUND)
@@ -153,9 +170,9 @@ export const blockUser = async (req: AdminRequest, res: Response) => {
     return res.status(OK_HTTP_CODE).json(new ApiResponse(OK_HTTP_CODE, blockedUser));
 }
 
-export const unblockUser = async (req: AdminRequest, res: Response)=> {
+export const unblockUser = async (req: AdminRequest, res: Response) => {
     await isUserExist(req);
-    
+
     const userId = req.params.userId;
 
     const unBlockedUser = await db.user.update({

@@ -1,10 +1,12 @@
 import { use } from "@/utils/responses/api.use";
 import { Router } from "express";
-import { signIn, signUp } from "./auth.services";
+import { logout, signIn, signUp } from "./auth.services";
+import { verifyAdmin } from "@/middlewares/verification.middleware";
 
 const router: Router = Router()
 
 router.post('/sign-in', use(signIn))
 router.post('/sign-up', use(signUp))
+router.post('/logout', use(verifyAdmin), use(logout))
 
 export default router;

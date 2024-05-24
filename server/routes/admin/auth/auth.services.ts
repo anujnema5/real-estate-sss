@@ -1,10 +1,11 @@
 import { db } from "@/db";
 import { adminInputSchema, adminLoginSchema } from "@/schema/admin.schema";
-import { ADMIN_ALREADY_EXIST, BAD_REQUEST_HTTP_CODE, CONFLICT_HTTP_CODE, COULDNT_FOUND_YOU_ACCOUNT, INCORRECT_PASSWORD, INVALID_INPUT, UNAUTHORIZED_HTTP_CODE, USERNAME_OR_EMAIL_REQUIRED } from "@/utils/constants/constants";
+import { ADMIN_ALREADY_EXIST, ADMIN_NOT_FOUND, BAD_REQUEST_HTTP_CODE, CONFLICT_HTTP_CODE, COULDNT_FOUND_YOU_ACCOUNT, INCORRECT_PASSWORD, INVALID_INPUT, NOT_FOUND_HTTP_CODE, OK_HTTP_CODE, UNAUTHORIZED_HTTP_CODE, USERNAME_OR_EMAIL_REQUIRED } from "@/utils/constants/constants";
 import { getAdminByEmail, getAdminByUsername } from "@/utils/database/getEntity";
 import { CustomError } from "@/utils/responses/api.error";
 import { ApiResponse } from "@/utils/responses/api.response";
 import { generateAccessRefreshToken } from "@/utils/tokens/token.utils";
+import { AdminRequest } from "@/utils/types/types";
 import { Admin } from "@prisma/client";
 import { compare, hash } from "bcryptjs";
 import { Response } from "express";
@@ -94,4 +95,20 @@ export const signUp =
             .cookie("accessToken", accessToken)
             .cookie("refreshToken", refreshToken)
             .json(new ApiResponse(200, { newAdmin, accessToken }))
+    }
+
+export const logout =
+    async (req: AdminRequest, res: Response) => {
+        const adminId = req.admin.id;
+
+        const admin = await db.admin.update({
+            where: { id: adminId },
+            data: { refreshToken: null }
+        })
+
+        if(!admin) {
+            throw new CustomError(NOT_FOUND_HTTP_CODE, ADMIN_NOT_FOUND)
+        }
+
+        return res.status(OK_HTTP_CODE).json(new ApiResponse(OK_HTTP_CODE, null, 'User Loggged out successfully'))
     }
