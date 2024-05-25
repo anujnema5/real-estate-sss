@@ -13,14 +13,16 @@ type entityType =
 
 const useEntityFetch = (entityType: string): entityType => {
     const entityName = entityType
-    console.log(entityName);
     
     const { data, isLoading, isSuccess, isError, error } = useEntityQuery(entityName);
 
     if (isError) {
         console.log(error);
+        
         return notFound()
     }
+
+    
 
     return { data, isLoading, isSuccess, isError, error, entityName }
 }

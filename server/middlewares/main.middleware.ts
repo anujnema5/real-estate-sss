@@ -1,11 +1,13 @@
 import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import { ApiError } from '@/utils/responses/api.error';
 import passport from '@/services/passport-config'
 
 export const primaryMiddlewares = (app: express.Application)=> {
     app.use(express.json());
 
+    app.use(cookieParser())
     // CORS MIDDLEWARE
     app.use(
         cors({
@@ -14,6 +16,7 @@ export const primaryMiddlewares = (app: express.Application)=> {
             credentials: true,
         })
     );
+
 
     app.use(passport.initialize());
 

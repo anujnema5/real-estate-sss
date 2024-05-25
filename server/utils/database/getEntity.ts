@@ -24,12 +24,9 @@ export const getVendorByUserId = async (userId: string) => {
     return await db.vendor.findUnique({ where: { userId } });
 }
 
-export const getAdminById = async (id: string) => {
-    return await db.admin.findUnique({
-        where: { id }, omit: {
-            refreshToken: false
-        }
-    });
+export const getAdminById = async (id: any) => {
+    // console.log("ID is" +  {...id})
+    return await db.admin.findUnique({where: { id }});
 }
 
 export const getAdminByEmail = async (email: string) => {

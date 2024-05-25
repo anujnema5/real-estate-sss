@@ -124,6 +124,25 @@ export const getAvailablePropertyWithType = async (req: AdminRequest, res: Respo
 
 export const getProperty =
     async (req: AdminRequest, res: Response) => {
-        const property = await isPropertyExist(req);
+        await isPropertyExist(req);
+
+        const id = req.params.propertyId;
+        const property = await db.property.findUnique(
+            {
+                where: { id },
+                include: {
+                    booking: true,
+                    user: {
+                        omit: {
+                            password: true,
+                            refreshToken: true
+                        }
+                    },
+
+                    vendor: true,
+                    images: true,
+                    like: true
+                }
+            })
         return res.status(OK_HTTP_CODE).json(new ApiResponse(OK_HTTP_CODE, property));
     }

@@ -11,6 +11,7 @@ type TDashboardProvider = {
 
 const DashboardProvider = ({ children, params, pathName }: TDashboardProvider) => {
     const [ellipses, setEllipses] = useState(true);
+    
     return (
         <div className=''>
             <main className='flex flex-col gap-4 p-5 pt-8'>

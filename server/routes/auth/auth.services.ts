@@ -53,7 +53,7 @@ export const signInService = async (req: Request, res: Response) => {
         return res.status(OK_HTTP_CODE)
             .cookie('accessToken', accessToken, options)
             .cookie('refreshToken', refreshToken, options)
-            .json(new ApiResponse(OK_HTTP_CODE, { accessToken }));
+            .json(new ApiResponse(OK_HTTP_CODE, { accessToken, refreshToken }));    
     }
 
     // MORE CODE TO BE SETUP FOR OTP

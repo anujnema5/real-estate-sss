@@ -107,6 +107,7 @@ export const userType = async (req: UserSubRequest, res: Response, next: NextFun
 };
 
 export const verifyAdmin = async (req: AdminRequest, res: Response, next: NextFunction) => {
+    console.log(req.cookies.refreshToken)
     const adminId = getToken(req, { admin: true })?.adminId;
 
     const admin = await db.admin.findUnique({

@@ -39,6 +39,10 @@ export const getUser = async (req: AdminRequest, res: Response) => {
             where: {
                 id:userId
             },
+            omit: {
+                password: true,
+                refreshToken: true
+            },
             include: {
                 account: true,
                 vendor: true,

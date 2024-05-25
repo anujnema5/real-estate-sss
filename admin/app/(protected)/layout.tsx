@@ -66,7 +66,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <main className="overflow-x-hidden">
       <Header/>
       <div className="flex border-t relative">
-      <aside className='sticky top-0 h-screen min-w-64 border-r text-gray-800 p-4 flex flex-col justify-between'>
+      <aside className='sticky top-0 min-h-screen min-w-64 border-r text-gray-800 p-4 flex flex-col justify-between'>
         <div>
           <nav className='space-y-2'>
             {MenuItems.map((item) => (
@@ -82,7 +82,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             ))}
           </nav>
         </div>
-        <Button onClick={useLogout}  variant={'default'}>
+        <Button onClick={handleLogout}  variant={'default'}>
           
           {isLoading ? <Icons.spinner className='mr-2 h-4 w-4 animate-spin' /> : "Logout"}
         </Button>

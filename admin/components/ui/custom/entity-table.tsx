@@ -17,9 +17,20 @@ import Section from '@/components/section';
 import useEntityFetch from '@/hooks/useEntity-fetch';
 import { Input } from '../input';
 import { Button } from '../button';
+import { useDispatch } from 'react-redux';
+import { logout } from '@/features/auth/authSlice';
 
 export function DynamicTable({ entity }: { entity: string }) {
-  const { data, isLoading, isSuccess, entityName } = useEntityFetch(entity);
+  const dispatch = useDispatch();
+
+  const { data, isLoading, isSuccess, entityName, error, isError } = useEntityFetch(entity);
+
+  
+
+  if (error) {
+    console.log(error)
+    dispatch(logout())
+  }
 
   if (!data || data.data.length === 0) return <p>No data available :(</p>;
 
@@ -35,7 +46,7 @@ export function DynamicTable({ entity }: { entity: string }) {
           {/* <TableCaption>{entityName ? ` ${entityName.firstLetterCapital()} Table` : `Dynamic Table`}</TableCaption> */}
           <TableHeader>
             <TableRow>
-              {headersKeys.map(header => (
+              {headersKeys?.map(header => (
                 <TableHead key={header} className='uppercase'>{header}</TableHead>
               ))}
             </TableRow>
@@ -51,8 +62,8 @@ export function DynamicTable({ entity }: { entity: string }) {
                           {String(entity[headers])}
                         </Link>
                       </TableCell>
-                    } 
-                    
+                    }
+
                     else {
                       return <Button className='h-5 mt-2'>{'Exist'}</Button>
                     }

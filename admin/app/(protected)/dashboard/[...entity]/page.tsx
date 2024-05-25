@@ -12,6 +12,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import AccordionTable from '@/components/ui/custom/accordion-table';
 
 const page = ({ params }: { params: { entity: string[] } }) => {
   const arr = params.entity
@@ -28,34 +29,9 @@ const page = ({ params }: { params: { entity: string[] } }) => {
 
   const paramString = arr.join(" ");
 
-  console.log(`/${arr[0]}/${arr[1]}`);
-  console.log(data?.data)
-
-  let headers;
-  if (typeof data?.data === 'object') {
-    headers = Object.keys(data?.data);
-    console.log(headers)
-  }
-
   return (
     <DashboardProvider params={paramString} pathName={pathname}>
-      <Card className='w-[80dvw]'>
-        <CardHeader className=''>
-          <Accordion type="single" collapsible className="w-full ">
-            <AccordionItem value="item-1">
-              <AccordionTrigger className='text-xl font-semibold no-underline'>User details</AccordionTrigger>
-              <AccordionContent>
-                <div className="flex gap-5">
-                  {headers?.map((header: string) => (
-
-                    <span>{header}</span>
-                  ))}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </CardHeader>
-      </Card>
+      <AccordionTable data={data} />
     </DashboardProvider>
   )
 }
