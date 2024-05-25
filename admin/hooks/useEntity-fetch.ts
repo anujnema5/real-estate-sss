@@ -22,8 +22,6 @@ const useEntityFetch = (entityType: string): entityType => {
         return notFound()
     }
 
-    
-
     return { data, isLoading, isSuccess, isError, error, entityName }
 }
 
