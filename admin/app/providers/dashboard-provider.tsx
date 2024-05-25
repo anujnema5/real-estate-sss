@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react'
-import DashboardBreakcrumb from '../ui/custom/dynamic-breakcrumb'
+import DashboardBreakcrumb from '../../components/ui/custom/dynamic-breakcrumb'
 import '@/utils/custom-prototypes'
 
 type TDashboardProvider = {

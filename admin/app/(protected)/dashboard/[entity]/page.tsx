@@ -3,7 +3,7 @@ import Section,{ DynamicTable } from '@/components/ui/custom/entity-table';
 
 import React from 'react'
 import { usePathname } from 'next/navigation';
-import DashboardProvider from '@/components/providers/dashboard-provider';
+import DashboardProvider from '@/app/providers/dashboard-provider';
 
 const page = ({ params }: { params: { entity: string } }) => {
     console.log(params.entity)

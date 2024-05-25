@@ -2,7 +2,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { ThemeProvider } from '@/app/providers/theme-provider';
-import { GlobalState } from '@/components/providers/redux-provider';
+import { GlobalState } from '@/app/providers/redux-provider';
 import AuthProvider from './providers/auth-provider';
 
 const inter = Inter({ subsets: ['latin'] });
