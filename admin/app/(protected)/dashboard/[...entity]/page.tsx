@@ -1,8 +1,8 @@
 'use client'
+import React from 'react'
 import DashboardProvider from '@/app/providers/dashboard-provider';
 import useEntityFetch from '@/hooks/useEntity-fetch';
 import { usePathname } from 'next/navigation';
-import React from 'react'
 import '@/utils/custom-prototypes'
 
 import AccordionTable from '@/components/ui/custom/accordion-table';

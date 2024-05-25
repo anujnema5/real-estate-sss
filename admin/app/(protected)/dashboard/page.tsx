@@ -2,7 +2,7 @@
 import Section from '@/components/section'
 import React from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import DashboardProvider from '@/components/providers/dashboard-provider'
+import DashboardProvider from '@/app/providers/dashboard-provider'
 
 const page = () => {
 	return (
