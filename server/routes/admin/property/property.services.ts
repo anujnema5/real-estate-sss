@@ -131,7 +131,6 @@ export const getProperty =
             {
                 where: { id },
                 include: {
-                    booking: true,
                     user: {
                         omit: {
                             password: true,

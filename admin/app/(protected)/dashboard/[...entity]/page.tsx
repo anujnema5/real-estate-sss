@@ -31,7 +31,7 @@ const page = ({ params }: { params: { entity: string[] } }) => {
 
   return (
     <DashboardProvider params={paramString} pathName={pathname}>
-      <AccordionTable data={data} />
+      <AccordionTable data={data} title={arr[0]} />
     </DashboardProvider>
   )
 }

@@ -46,10 +46,8 @@ export const getUser = async (req: AdminRequest, res: Response) => {
             include: {
                 account: true,
                 vendor: true,
-                booking: true,
-                leads: true,
                 property: true,
-                subscription: true
+                subscription: true,
             }
         });
 

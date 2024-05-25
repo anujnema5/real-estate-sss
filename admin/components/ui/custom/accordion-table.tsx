@@ -1,5 +1,4 @@
-import React from 'react'
-
+import React from 'react';
 import { Card, CardHeader } from '@/components/ui/card';
 
 import {
@@ -7,39 +6,40 @@ import {
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
-} from "@/components/ui/accordion"
+} from '@/components/ui/accordion';
 
 import {
     Table,
     TableBody,
-    TableCaption,
-    TableCell,
-    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table"
+    TableCell,
+} from '@/components/ui/table';
 
-import '@/utils/custom-prototypes'
+import '@/utils/custom-prototypes';
 
-const AccordionTable = ({ data }: { data: any }) => {
-    type MainType = {
-        entitySpecificKeys: string[];
-        entityOneToMany: { title: string;[key: string]: any }[];
-        entityOneToOne: { title: string;[key: string]: any }[];
-    }
+interface AccordionTableProps {
+    data: Record<string, any>;
+    title: string;
+}
 
-    const main: any = {
+interface MainData {
+    entitySpecificKeys: string[];
+    entityOneToMany: { title: string;[key: string]: any }[];
+    entityOneToOne: { title: string;[key: string]: any }[];
+}
+
+const AccordionTable: React.FC<AccordionTableProps> = ({ data, title }) => {
+    const main: MainData = {
         entitySpecificKeys: [],
         entityOneToMany: [],
-        entityOneToOne: []
-    }
-
-    console.log(main)
+        entityOneToOne: [],
+    };
 
     const dataEntries = data?.data || {};
 
-    for (const [key, value] of Object.entries(dataEntries)) {
+    Object.entries(dataEntries).forEach(([key, value]) => {
         if (value === null || typeof value === 'string') {
             main.entitySpecificKeys.push(key);
         } else if (Array.isArray(value)) {
@@ -47,83 +47,39 @@ const AccordionTable = ({ data }: { data: any }) => {
         } else if (typeof value === 'object') {
             main.entityOneToOne.push({ title: key, ...value });
         }
-    }
-
-    const mappable = Object.keys(main);
-    console.log(mappable)
+    });
 
     return (
-        <div className='w-[79vw] flex flex-col gap-7'>
-
-            {mappable?.map((entity: any) => {
+        <div className="w-[79vw] flex flex-col gap-7">
+            {Object.keys(main).map((entity) => {
                 if (entity === 'entitySpecificKeys') {
-                    return <Card className=''>
-                        <CardHeader className=''>
-                            <Accordion type="single" collapsible className="w-full ">
-                                <AccordionItem value="  ">
-                                    <AccordionTrigger className='text-xl font-semibold no-underline'>User details</AccordionTrigger>
-                                    <AccordionContent>
-                                        <Table>
-                                            <TableHeader className=''>
-                                                <TableRow>
-                                                    {main.entitySpecificKeys?.map((header: string | null) => (
-                                                        <TableHead className=" uppercase">{header}</TableHead>
-                                                    ))}
-                                                </TableRow>
-                                            </TableHeader>
-                                            <TableBody>
-                                                {main.entitySpecificKeys.map((invoice, index) => {
-                                                    console.log()
-                                                    if (!dataEntries[invoice]) {
-                                                        return <TableCell className="font-medium">
-                                                            {"None"}
-                                                        </TableCell>
-                                                    } else {
-                                                        return <TableCell className="font-medium whitespace-nowrap">
-                                                            {dataEntries[invoice]}
-                                                        </TableCell>
-                                                    }
-                                                }
-                                                )}
-                                            </TableBody>
-                                        </Table>
-                                    </AccordionContent>
-                                </AccordionItem>
-                            </Accordion>
-                        </CardHeader>
-                    </Card>
-                } else {
-                    return main[entity].map((otherEntity: any) => {
-                        const headers = Object.keys(otherEntity)
-                        const keyss = Object.values(otherEntity);
-                        return <Card className=''>
-                            <CardHeader className=''>
-                                <Accordion type="single" collapsible className="w-full ">
-                                    <AccordionItem value="  ">
-                                        <AccordionTrigger className='text-xl font-semibold no-underline'>{otherEntity.title.firstLetterCapital()}</AccordionTrigger>
+                    return (
+                        <Card key={entity}>
+                            <CardHeader>
+                                <Accordion type="single" collapsible className="w-full">
+                                    <AccordionItem value="details">
+                                        <AccordionTrigger className="text-xl font-semibold no-underline">
+                                            {`${title.firstLetterCapital()}'s details`}
+                                        </AccordionTrigger>
                                         <AccordionContent>
                                             <Table>
-                                                <TableHeader className=''>
+                                                <TableHeader>
                                                     <TableRow>
-                                                        {headers?.map((header: string | null) => (
-                                                            <TableHead className=" uppercase">{header}</TableHead>
+                                                        {main.entitySpecificKeys.map((header) => (
+                                                            <TableHead key={header} className="uppercase">
+                                                                {header}
+                                                            </TableHead>
                                                         ))}
                                                     </TableRow>
                                                 </TableHeader>
                                                 <TableBody>
-                                                    {keyss.map((invoice: any, index) => {
-                                                        console.log()
-                                                        if (!invoice || typeof invoice === 'object') {
-                                                            return <TableCell className="font-medium">
-                                                                {"None"}
+                                                    <TableRow>
+                                                        {main.entitySpecificKeys.map((key) => (
+                                                            <TableCell key={key} className="font-medium whitespace-nowrap">
+                                                                {dataEntries[key] ?? 'None'}
                                                             </TableCell>
-                                                        } else {
-                                                            return <TableCell className="font-medium whitespace-nowrap">
-                                                                {invoice}
-                                                            </TableCell>
-                                                        }
-                                                    }
-                                                    )}
+                                                        ))}
+                                                    </TableRow>
                                                 </TableBody>
                                             </Table>
                                         </AccordionContent>
@@ -131,14 +87,51 @@ const AccordionTable = ({ data }: { data: any }) => {
                                 </Accordion>
                             </CardHeader>
                         </Card>
-                    })
-
+                    );
+                } else {
+                    return main[entity].map((otherEntity:any) => {
+                        const headers = Object.keys(otherEntity);
+                        const values = Object.values(otherEntity);
+                        return (
+                            <Card key={otherEntity.title}>
+                                <CardHeader>
+                                    <Accordion type="single" collapsible className="w-full">
+                                        <AccordionItem value={otherEntity.title}>
+                                            <AccordionTrigger className="text-xl font-semibold no-underline">
+                                                {otherEntity.title.firstLetterCapital()}
+                                            </AccordionTrigger>
+                                            <AccordionContent>
+                                                <Table>
+                                                    <TableHeader>
+                                                        <TableRow>
+                                                            {headers.map((header) => (
+                                                                <TableHead key={header} className="uppercase">
+                                                                    {header}
+                                                                </TableHead>
+                                                            ))}
+                                                        </TableRow>
+                                                    </TableHeader>
+                                                    <TableBody>
+                                                        <TableRow>
+                                                            {values.map((value, index) => (
+                                                                <TableCell key={index} className="font-medium whitespace-nowrap">
+                                                                    {typeof value === 'object' ? 'None' : value}
+                                                                </TableCell>
+                                                            ))}
+                                                        </TableRow>
+                                                    </TableBody>
+                                                </Table>
+                                            </AccordionContent>
+                                        </AccordionItem>
+                                    </Accordion>
+                                </CardHeader>
+                            </Card>
+                        );
+                    });
                 }
             })}
         </div>
-    )
-}
+    );
+};
 
-export default AccordionTable
-
-
+export default AccordionTable;
