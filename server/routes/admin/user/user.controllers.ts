@@ -2,17 +2,21 @@ import { verifyAdmin } from "@/middlewares/verification.middleware";
 import { use } from "@/utils/responses/api.use";
 import { Router } from "express";
 import { blockUser, getAllUsers, getInvalidSubscription, getNonSubscribedUsers, getSubscribedUsers, getUser, getValidSubscription, unblockUser, usersWithVendor } from "./user.services";
+import { getCachedData } from "@/middlewares/redis.middleware";
 
-const router : Router = Router()
+const router : Router = Router();
 
-router.get('/', use(verifyAdmin), use(getAllUsers))
-router.get('/vendor', use(verifyAdmin), use(usersWithVendor))
-router.get('/subscribed', use(verifyAdmin), use(getSubscribedUsers))
-router.get('/non-subscribed', use(verifyAdmin), use(getNonSubscribedUsers))
-router.get('/subscription', use(verifyAdmin), use(getValidSubscription))
-router.get('/invalid-subscription', use(verifyAdmin), use(getInvalidSubscription))
-router.get('/:userId/', use(verifyAdmin), use(getUser))
-router.patch('/:userId/block', use(verifyAdmin), use(blockUser))
-router.patch('/:userId/unblock', use(verifyAdmin), use(unblockUser))
+router.use(use(verifyAdmin))
+router.use(use(getCachedData))
+
+router.get('/', use(getAllUsers))
+router.get('/vendor', use(usersWithVendor))
+router.get('/subscribed', use(getSubscribedUsers))
+router.get('/non-subscribed', use(getNonSubscribedUsers))
+router.get('/subscription', use(getValidSubscription))
+router.get('/invalid-subscription', use(getInvalidSubscription))
+router.get('/:userId/', use(getUser))
+router.patch('/:userId/block', use(blockUser))
+router.patch('/:userId/unblock', use(unblockUser))
 
 export default router;

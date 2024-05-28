@@ -36,6 +36,7 @@ export const FORBIDDEN_HTTP_CODE = 403;
 export const NOT_FOUND_HTTP_CODE = 404;
 export const METHOD_NOT_ALLOWED_HTTP_CODE = 405;
 export const CONFLICT_HTTP_CODE = 409;
+export const TOO_MANY_REQUESTS = 429;
 
 // 5xx Server Errors
 export const INTERNAL_SERVER_ERROR_HTTP_CODE = 500;
@@ -117,3 +118,6 @@ export const BOOKING_CREATED_SUCCESS = "Booking created successfully."
 export const CONFLICTING_THE_RECORD = "You are conflicting the record"
 export const CONFLICTING_THE_VENDOR_AND_PROPERTYID = "You are conflicting vendor and propertyId"
 export const PROPERTY_DONT_EXIST = "property does not exist";
+
+// OTHERS
+export const REDIS_TIMEOUT = 300;

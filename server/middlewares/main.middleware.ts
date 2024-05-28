@@ -3,11 +3,13 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { ApiError } from '@/utils/responses/api.error';
 import passport from '@/services/passport-config'
+import redisClient from '@/db/redis';
+import { getCachedData, rateLimiter } from './redis.middleware';
 
-export const primaryMiddlewares = (app: express.Application)=> {
+export const primaryMiddlewares = (app: express.Application) => {
     app.use(express.json());
-
     app.use(cookieParser())
+
     // CORS MIDDLEWARE
     app.use(
         cors({
@@ -17,8 +19,9 @@ export const primaryMiddlewares = (app: express.Application)=> {
         })
     );
 
-
-    app.use(passport.initialize());
+    app.use(rateLimiter)
+    app.use(passport.initialize())
+    redisClient.initRedisClient()
 
     // FOR TESTING ONLY
     app.get('/', (req: Request, res: Response) => {

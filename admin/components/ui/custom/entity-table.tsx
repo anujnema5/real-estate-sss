@@ -25,8 +25,6 @@ export function DynamicTable({ entity }: { entity: string }) {
 
   const { data, isLoading, isSuccess, entityName, error, isError } = useEntityFetch(entity);
 
-  
-
   if (error) {
     console.log(error)
     dispatch(logout())

@@ -1,5 +1,6 @@
 import { db } from "@/db";
-import { NOT_FOUND_HTTP_CODE, OK_HTTP_CODE, USERID_NOT_FOUND, USER_NOT_FOUND } from "@/utils/constants/constants";
+import {redis} from "@/db/redis";
+import { NOT_FOUND_HTTP_CODE, OK_HTTP_CODE, REDIS_TIMEOUT, USERID_NOT_FOUND, USER_NOT_FOUND } from "@/utils/constants/constants";
 import { CustomError } from "@/utils/responses/api.error";
 import { ApiResponse } from "@/utils/responses/api.response";
 import { AdminRequest } from "@/utils/types/types";
@@ -29,6 +30,8 @@ export const getAllUsers = async (req: AdminRequest, res: Response) => {
         }
     });
 
+    // console.log(req.originalUrl)
+    await redis.setex(req.originalUrl, REDIS_TIMEOUT, JSON.stringify(users))
     return res.status(OK_HTTP_CODE).json(new ApiResponse(OK_HTTP_CODE, users))
 }
 
@@ -54,7 +57,7 @@ export const getUser = async (req: AdminRequest, res: Response) => {
     if (!user) {
         throw new CustomError(NOT_FOUND_HTTP_CODE, USER_NOT_FOUND)
     }
-
+    await redis.setex(req.originalUrl, REDIS_TIMEOUT, JSON.stringify(user))
     return res.status(200).json(new ApiResponse(200, user));
 }
 
@@ -80,7 +83,7 @@ export const getSubscribedUsers = async (req: AdminRequest, res: Response) => {
             }
         }
     })
-
+    await redis.setex(req.originalUrl, REDIS_TIMEOUT, JSON.stringify(users))
     return res.status(OK_HTTP_CODE).json(new ApiResponse(OK_HTTP_CODE, users))
 }
 
@@ -99,7 +102,7 @@ export const getNonSubscribedUsers = async (req: AdminRequest, res: Response) =>
             subscription: true
         }
     })
-
+    await redis.setex(req.originalUrl, REDIS_TIMEOUT, JSON.stringify(users))
     return res.status(OK_HTTP_CODE).json(new ApiResponse(OK_HTTP_CODE, users))
 }
 
@@ -117,7 +120,7 @@ export const getInvalidSubscription = async (req: AdminRequest, res: Response) =
             }
         }
     })
-
+    await redis.setex(req.originalUrl, REDIS_TIMEOUT, JSON.stringify(users))
     return res.status(OK_HTTP_CODE).json(new ApiResponse(OK_HTTP_CODE, users))
 }
 
@@ -135,7 +138,7 @@ export const getValidSubscription = async (req: AdminRequest, res: Response) => 
             }
         }
     })
-
+    await redis.setex(req.originalUrl, REDIS_TIMEOUT, JSON.stringify(users))
     return res.status(OK_HTTP_CODE).json(new ApiResponse(OK_HTTP_CODE, users))
 }
 
@@ -157,7 +160,7 @@ export const usersWithVendor = async (req: AdminRequest, res: Response) => {
             vendor: true,
         }
     })
-
+    await redis.setex(req.originalUrl, REDIS_TIMEOUT, JSON.stringify(users))
     return res.status(OK_HTTP_CODE).json(new ApiResponse(OK_HTTP_CODE, users));
 }
 
@@ -168,7 +171,7 @@ export const blockUser = async (req: AdminRequest, res: Response) => {
     const blockedUser = await db.user.update({
         data: { blocked: true }, where: { id: userId }
     })
-
+    await redis.setex(req.originalUrl, REDIS_TIMEOUT, JSON.stringify(blockUser))
     return res.status(OK_HTTP_CODE).json(new ApiResponse(OK_HTTP_CODE, blockedUser));
 }
 
@@ -180,6 +183,6 @@ export const unblockUser = async (req: AdminRequest, res: Response) => {
     const unBlockedUser = await db.user.update({
         data: { blocked: false }, where: { id: userId }
     })
-
+    await redis.setex(req.originalUrl, REDIS_TIMEOUT, JSON.stringify(unblockUser))
     return res.status(OK_HTTP_CODE).json(new ApiResponse(OK_HTTP_CODE, unBlockedUser));
 }

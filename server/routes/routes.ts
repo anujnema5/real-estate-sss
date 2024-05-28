@@ -13,5 +13,6 @@ api.use('/auth', authRoutes)
 api.use('/user', userRoutes)
 api.use('/vendor', vendorRoutes)
 api.use('/admin', adminRoutes)
+api.use('/dev', devRoutes)
 
 export default api.use('/v1', api);

@@ -11,7 +11,6 @@ const page = ({ params }: { params: { entity: string } }) => {
 
     return (
         <DashboardProvider params={params.entity} pathName={pathname}>
-            {/* TEMPERORY HRs */}
             <hr className='w-full ' />
             <DynamicTable entity={params.entity} />
             <hr className='w-full' />

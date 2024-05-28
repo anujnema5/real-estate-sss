@@ -1,4 +1,5 @@
 import { db } from "@/db";
+import {redis} from "@/db/redis";
 import { adminInputSchema, adminLoginSchema } from "@/schema/admin.schema";
 import { ADMIN_ALREADY_EXIST, ADMIN_NOT_FOUND, BAD_REQUEST_HTTP_CODE, CONFLICT_HTTP_CODE, COULDNT_FOUND_YOU_ACCOUNT, INCORRECT_PASSWORD, INVALID_INPUT, NON_VALID_REFERESH_TOKEN, NOT_FOUND_HTTP_CODE, OK_HTTP_CODE, REFERESH_TOKEN_NOT_FOUND, TOKEN_EXPIRE_OR_USED, TOKEN_REFERESHED, UNAUTHORIZED_HTTP_CODE, USERNAME_OR_EMAIL_REQUIRED } from "@/utils/constants/constants";
 import { getAdminByEmail, getAdminById, getAdminByUsername } from "@/utils/database/getEntity";
@@ -99,7 +100,7 @@ export const signUp =
             .json(new ApiResponse(200, { newAdmin, accessToken }))
     }
 
-export const refreshToken = async (req: Request, res: Response)=> {
+export const refreshToken = async (req: Request, res: Response) => {
     const incomingrefreshToken = req.cookies.refreshToken || req.body.refreshToken
 
     if (!incomingrefreshToken) {
@@ -125,7 +126,7 @@ export const refreshToken = async (req: Request, res: Response)=> {
         .status(OK_HTTP_CODE)
         .cookie("accessToken", accessToken, options)
         .cookie("refreshToken", refreshToken, options)
-        .json(new ApiResponse(OK_HTTP_CODE, {accessToken}, TOKEN_REFERESHED))
+        .json(new ApiResponse(OK_HTTP_CODE, { accessToken }, TOKEN_REFERESHED))
 }
 
 export const logout =
@@ -137,12 +138,14 @@ export const logout =
             data: { refreshToken: null }
         })
 
-        if(!admin) {
+        if (!admin) {
             throw new CustomError(NOT_FOUND_HTTP_CODE, ADMIN_NOT_FOUND)
         }
 
+        await redis.flushall();
+
         return res.status(OK_HTTP_CODE)
-        .clearCookie("refreshToken")
-        .clearCookie("accessToken")
-        .json(new ApiResponse(OK_HTTP_CODE, null, 'User Loggged out successfully'))
-    }
+            .clearCookie("refreshToken")
+            .clearCookie("accessToken")
+            .json(new ApiResponse(OK_HTTP_CODE, null, 'User Loggged out successfully'))
+}

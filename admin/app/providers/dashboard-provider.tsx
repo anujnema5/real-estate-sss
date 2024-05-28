@@ -9,7 +9,7 @@ type TDashboardProvider = {
     pathName?: string
 }
 
-const DashboardProvider = ({ children, params, pathName }: TDashboardProvider) => {
+const   DashboardProvider = ({ children, params, pathName }: TDashboardProvider) => {
     const [ellipses, setEllipses] = useState(true);
     
     return (
@@ -23,7 +23,7 @@ const DashboardProvider = ({ children, params, pathName }: TDashboardProvider) =
                     <>
                         <div className='flex justify-between items-center '>
                             <h1 onClick={()=> setEllipses((elip)=> !elip)} 
-                            className={`text-4xl select-none cursor-pointer truncate font-bold hover:underline text-black dark:text-white ${ellipses && "w-3/12"}`}>
+                            className={`text-4xl select-none cursor-pointer truncate font-bold hover:underline text-black dark:text-white ${ellipses && "w-5/12 "}`}>
                                 {params.firstLetterCapital()}
                             </h1>
                         </div>
