@@ -6,7 +6,7 @@ import React from 'react'
 
 const Header = () => {
     return (
-        <div className='px-6 py-5 w-full h-full flex justify-between'>
+        <div className='px-6 py-5 w-full h-full flex justify-between bg-white'>
             <div className="flex items-center gap-3 ">
                 <LocationIcon />
                 {/* <Heading type={'h1'} text='Banglore'/> */}

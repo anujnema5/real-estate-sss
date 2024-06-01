@@ -39,7 +39,10 @@ export const createPackage =
 
 export const getPackages =
     async (req: AdminRequest, res: Response) => {
-        const packages = await db.package.findMany();
+        const packages = await db.package.findMany({include: {
+            subscription: true,
+
+        }});
         return res.status(OK_HTTP_CODE).json(new ApiResponse(OK_HTTP_CODE, packages));
     }
 

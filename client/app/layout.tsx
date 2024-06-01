@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import StateProvider from "./providers/redux-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,9 +17,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} scrollbar-thumb-rounded-md scrollbar scrollbar-thumb-primary scrollbar-w-3 `}>
-        {children}
-      </body>
+      <StateProvider>
+        <body className={`${inter.className} scrollbar-thumb-rounded-md scrollbar scrollbar-thumb-primary scrollbar-w-3 `}>
+          {children}
+        </body>
+      </StateProvider>
     </html>
   );
 }

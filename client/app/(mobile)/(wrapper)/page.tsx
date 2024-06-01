@@ -14,7 +14,7 @@ import React from 'react'
 
 const page = () => {
   return (
-    <div className='w-full min-h-screen bg-muted flex flex-col gap-4'>
+    <div className='w-full min-h-screen bg-muted flex flex-col px-3 gap-5'>
       <Search/>
       <Carousel/>
       <OfferBlock/>

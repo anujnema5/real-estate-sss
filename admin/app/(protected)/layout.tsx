@@ -7,7 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useDispatch } from "react-redux";
 import { logout } from "@/features/auth/authSlice";
-import { BarChartIcon, CalendarIcon, HomeIcon, PersonIcon } from "@radix-ui/react-icons";
+import { BarChartIcon, CalendarIcon, HomeIcon, PersonIcon, RocketIcon } from "@radix-ui/react-icons";
 import { useLogOutMutation } from "@/features/api/authApiSlice";
 import Header from "@/components/sections/Header/header";
 import { useLogout } from "@/hooks/useLogout";
@@ -39,15 +39,15 @@ const MenuItems = [
   },
 
   {
-    title: 'Revenue',
-    href: '/dashboard/revenue',
-    icon: <BarChartIcon />,
-  },
-
-  {
     title: 'Subscription',
     href: '/dashboard/subscription',
     icon: <CalendarIcon />,
+  },
+
+  {
+    title: 'Package',
+    href: '/dashboard/package',
+    icon: <RocketIcon />,
   },
 ];
 

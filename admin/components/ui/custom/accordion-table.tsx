@@ -123,8 +123,7 @@ const AccordionTable: React.FC<AccordionTableProps> = ({ data, title }) => {
                                                                         className="font-medium whitespace-nowrap">
                                                                         {value === null ? "None" :
                                                                             (typeof value === 'object' ? 'Exist' :
-                                                                                (typeof value === 'boolean' ?
-                                                                                    (value ? "Yes" : "No") : value))}
+                                                                                (typeof value === 'boolean' ? (value ? "Yes" : "No") : typeof value === 'number' ? (String(value)): value))}
 
                                                                     </TableCell>
                                                                 })}

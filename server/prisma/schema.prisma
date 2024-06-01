@@ -59,6 +59,7 @@ model User {
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   blocked       Boolean       @default(false)
+  otp           String?
   account       Account?
   vendor        Vendor?
   booking       Booking[]

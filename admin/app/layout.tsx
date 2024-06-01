@@ -8,9 +8,9 @@ import AuthProvider from './providers/auth-provider';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-	title: 'Next.js Shadcn + v0 Starter Template',
+	title: 'Admin Homie hub',
 	description:
-		'Next.js Starter Template with Tailwind CSS, Shadcn Components, v0 Components (Alpha), Bun as npm installer and builder, Vercel as deployer.',
+		'',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

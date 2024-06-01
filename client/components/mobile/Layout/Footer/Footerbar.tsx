@@ -4,7 +4,7 @@ import React from 'react'
 
 const Footerbar = () => {
   return (
-    <div className='lg:w-6/12 xl:w-[30vw] sm:w-8/12 w-full h-20 bg-white fixed bottom-0'>
+    <div className='w-full h-20 bg-white sticky bottom-0'>
       <ul className='flex w-full h-full items-center justify-between px-8 py-2'>
 
         {mobileFooterLinks?.map(({ Icon, href, title }) => (

@@ -1,5 +1,5 @@
 import React from 'react'
-import HeadingWrapper from '../../Layout/Providers/PrimaryWrapper'
+import HeadingWrapper from '../../Layout/Providers/heading-wrapper'
 
 const DayDeal = () => {
   return (

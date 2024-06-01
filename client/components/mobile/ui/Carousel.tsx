@@ -2,10 +2,10 @@ import React from 'react'
 
 const Carousel = () => {
     return (
-        <div className='px-5 py-3 w-full h-auto flex gap-4 overflow-x-auto scrollbar-none'>
-            <div className="w-max flex gap-3">
+        <div className='w-full h-auto flex gap-4'>
+            <div className="w-full h-44 flex gap-4 rounded-lg overflow-x-auto scrollbar-none">
                 {new Array(6).fill(0).map((_, i) => (
-                    <div className="min-h-48 sm:min-w-[20vw] min-w-[75vw] bg-zinc-300 rounded-lg"></div>
+                    <div className="h-full min-w-96 bg-zinc-300 rounded-lg"></div>
                 ))}
             </div>
         </div>

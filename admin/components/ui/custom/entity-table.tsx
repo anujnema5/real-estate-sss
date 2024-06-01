@@ -1,5 +1,7 @@
+'use client';
+
 import '@/utils/custom-prototypes'
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 
 import {
@@ -20,10 +22,10 @@ import { Button } from '../button';
 import { useDispatch } from 'react-redux';
 import { logout } from '@/features/auth/authSlice';
 
-export function DynamicTable({ entity }: { entity: string }) {
+export function   DynamicTable({ entity }: { entity: string }) {
   const dispatch = useDispatch();
-
   const { data, isLoading, isSuccess, entityName, error, isError } = useEntityFetch(entity);
+  const [keys, setKeys] = useState('');
 
   if (error) {
     console.log(error)
@@ -35,13 +37,23 @@ export function DynamicTable({ entity }: { entity: string }) {
   const headersKeys = Object.keys(data.data[0]);
   const entityData = data.data;
 
+  const handleSearch = (e: any) => {
+    setKeys(e.target.value.toLowerCase());
+  }
+
+  const filteredData = entityData.filter((item: any) => {
+    return headersKeys.some(key => {
+      const value = item[key];
+      return value && value.toString().toLowerCase().includes(keys);
+    });
+  });
+
   return (
     <div className="flex flex-col gap-5">
-      <Input className='w-4/12 rounded-md' placeholder={`Search ${entity}...`} />
-      <div className="rounded-md w-[80dvw]  border ">
+      <Input className='w-4/12 rounded-md' placeholder={`Search ${entity}...`} onChange={handleSearch} />
+      <div className="rounded-md w-[80dvw] border">
 
         <Table className=''>
-          {/* <TableCaption>{entityName ? ` ${entityName.firstLetterCapital()} Table` : `Dynamic Table`}</TableCaption> */}
           <TableHeader>
             <TableRow>
               {headersKeys?.map(header => (
@@ -50,25 +62,31 @@ export function DynamicTable({ entity }: { entity: string }) {
             </TableRow>
           </TableHeader>
           <TableBody className=''>
-            {entityData?.map((entity: any) => {
+            {filteredData.length === 0 && (<TableCell className='whitespace-nowrap text-black dark:text-white'>No Data Found</TableCell>)}
+            {filteredData?.map((entity: any) => {
               return (
-                <TableRow className=''>
-                  {headersKeys?.map((headers: any) => {
-                    if (typeof entity[headers] !== 'object' || entity[headers] === null || Array.isArray(entity[headers])) {
-                      return <TableCell className='whitespace-nowrap text-black dark:text-white'>
-                        <Link href={`/dashboard/${entityName}/${entity.id}`}>
-                          {String(entity[headers])}
-                        </Link>
-                      </TableCell>
+                <TableRow key={entity.id} className=''>
+                  
+                  {headersKeys?.map((header: any) => {
+                    const cellValue = entity[header];
+                    if (typeof cellValue !== 'object' || cellValue === null || Array.isArray(cellValue)) {
+                      return (
+                        <TableCell key={header} className='whitespace-nowrap text-black dark:text-white'>
+                          <Link href={`/dashboard/${entityName}/${entity.id}`}>
+                            {String(cellValue)}
+                          </Link>
+                        </TableCell>
+                      );
+                    } else {
+                      return (
+                        <TableCell key={header}>
+                          <Button className='h-5 mt-2'>{'Exist'}</Button>
+                        </TableCell>
+                      );
                     }
-
-                    else {
-                      return <Button className='h-5 mt-2'>{'Exist'}</Button>
-                    }
-                  })
-                  }
+                  })}
                 </TableRow>
-              )
+              );
             })}
           </TableBody>
         </Table>

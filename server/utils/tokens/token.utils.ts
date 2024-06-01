@@ -15,7 +15,7 @@ const generateToken = (data: Object, secret: string, expiry: string) => {
 const updateEntityWithRefreshToken = async (entityType: EntityType, entityId: string, refreshToken: string) => {
     const updateFn = entityType === 'user' ? (db.user.update as any) : (db.admin.update as any);
     console.log(entityId)
-    await updateFn({ where: { id: entityId }, data: { refreshToken } });
+    await updateFn({ where: { id: String(entityId) }, data: { refreshToken } });
 };
 
 export const generateAccessRefreshToken = async (entityType: EntityType, id: string) => {

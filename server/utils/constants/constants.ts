@@ -100,6 +100,10 @@ export const EMAIL_PHONENUMBER_REQUIRED  = "Invalid email and phone number"
 export const USERNAME_OR_EMAIL_REQUIRED = "Username or email is required."
 export const COULDNT_FOUND_YOU_ACCOUNT = "couldn't found your account"
 export const BLOCKED_ACCOUNT = "Sorry your account is blocked"
+export const INVALLID_PHONE_NUMBER = "Invalid phone number"
+export const THIS_PHONE_NUMBER_DO_NOT_EXIST = "This phone number do not exist";
+export const THIS_PHONE_NUMBER_EXIST = "This phone number exist";
+export const INVALID_OTP = "Invalid OTP"
 
 /* General messages */
 export const PAGE_NOT_FOUND = "Page not found.";
