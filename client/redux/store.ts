@@ -11,6 +11,8 @@ const store = configureStore({
         auth: authReducer
     },
 
+    devTools: true, // ONLY FOR DEV
+
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({ serializableCheck: false }).concat(apiSlice.middleware)
 })

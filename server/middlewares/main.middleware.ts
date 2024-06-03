@@ -19,7 +19,7 @@ export const primaryMiddlewares = (app: express.Application) => {
         })
     );
 
-    app.use(rateLimiter)
+    // app.use(rateLimiter)
     app.use(passport.initialize())
     redisClient.initRedisClient()
 

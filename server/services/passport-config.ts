@@ -16,12 +16,12 @@ passport.use(new GoogleStrategy({
         const emailVerified = profile._json.email_verified;
         const { given_name: firstName, family_name: lastName } = profile._json;
         const email = emails?.[0].value as string;
-
+        
         // checking existing user
-        const existinUser = await getUserByEmail(email) as User;
+        const existinUser = await db.user.findUnique({where: {email}})
 
         if (existinUser) {
-            
+
             if (existinUser.blocked) {
                 return cb(null, false);
             }
@@ -47,10 +47,10 @@ passport.use(new GoogleStrategy({
                     emailVerified,
                     email,
                     provider
-                }
+                }, omit: { password: true }
             });
+
             const createdAccount = await prisma.account.create({ data: { userId: createdUser.id, avatar } });
-            createdUser.password = null;
             return [createdUser, createdAccount];
         });
 

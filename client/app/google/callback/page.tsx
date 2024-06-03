@@ -13,12 +13,11 @@ const page = () => {
     const handleRefreshUser = async () => {
         try {
             const { data } = await refreshuser('').unwrap();
-            console.log(data)
             dispatch(setCredentials(data))
             router.push('/')
         } catch (error) {
-            dispatch(logout())
-            router.push('/login')
+            console.log(error)
+            dispatch(logout())  
         }
     }
 

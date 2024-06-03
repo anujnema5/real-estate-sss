@@ -1,6 +1,6 @@
 import React from 'react'
-import HeadingWrapper from '../../Layout/Providers/heading-wrapper'
-import Carousel from '../Services/NewLaunchServices'
+import HeadingWrapper from '@/components/mobile/Layout/Providers/heading-wrapper'
+import Carousel from './NewLaunchServices'
 
 const GetLooks = () => {
     return (

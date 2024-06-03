@@ -6,7 +6,7 @@ import { Request, Response } from "express"
 import { z } from "zod";
 import { generateAccessRefreshToken } from "@/utils/tokens/token.utils";
 import { ApiResponse } from "@/utils/responses/api.response";
-import bcrypt from 'bcryptjs';
+import bcrypt, { encodeBase64 } from 'bcryptjs';
 import { options } from "@/utils/static/cookie.utils";
 import { User } from "@prisma/client";
 import jwt from 'jsonwebtoken';
@@ -112,7 +112,12 @@ export const refreshToken = async (req: Request, res: Response) => {
         throw new CustomError(UNAUTHORIZED_HTTP_CODE, NON_VALID_REFERESH_TOKEN)
     }
 
-    const foundUser = await getUserById(decodedToken.userId, { includeReferesh: true }) as any;
+    // const foundUser = await getUserById(decodedToken.userId, { includeReferesh: true }) as any;
+    const foundUser = await db.user.findUnique({
+        where: { id: decodedToken.userId },
+        include: { subscription: true, account: true, vendor: true },
+        omit: { password: true }
+    }) as any;
 
     if (foundUser?.refreshToken !== incomingrefreshToken) {
         throw new CustomError(UNAUTHORIZED_HTTP_CODE, TOKEN_EXPIRE_OR_USED)
@@ -126,10 +131,11 @@ export const refreshToken = async (req: Request, res: Response) => {
         .status(OK_HTTP_CODE)
         .cookie("accessToken", accessToken, options)
         .cookie("refreshToken", refreshToken, options)
-        .json(new ApiResponse(OK_HTTP_CODE, { user: foundUser, accessToken }, TOKEN_REFERESHED))
+        .json(new ApiResponse(OK_HTTP_CODE, { user: foundUser, token: accessToken }, TOKEN_REFERESHED))
 }
 
 export const googleCallback = async (req: any, res: Response) => {
+    console.log('Reaching here')
     const [accessToken, refreshToken] = await generateAccessRefreshToken('user', req.user.id);
     return res.status(200)
         .cookie("accessToken", accessToken, options)
@@ -235,6 +241,7 @@ export const confirmOtp = async (req: Request, res: Response) => {
 
     const updatedUser = await db.user.update({
         where: { phoneNumber },
+        include: { account: true, subscription: true },
         data: { otp: null },
         omit: { password: true, refreshToken: true }
     })
@@ -242,5 +249,5 @@ export const confirmOtp = async (req: Request, res: Response) => {
     return res.status(OK_HTTP_CODE)
         .cookie('accessToken', accessToken, options)
         .cookie('refreshToken', refreshToken, options)
-        .json(new ApiResponse(OK_HTTP_CODE, { user: updatedUser, accessToken }, 'OTP Confirmed successfully'));
+        .json(new ApiResponse(OK_HTTP_CODE, { user: updatedUser, token: accessToken }, 'OTP Confirmed successfully'));
 }

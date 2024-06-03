@@ -41,12 +41,16 @@ const usePhoneLogin = () => {
         try {
             const inputOTPResponse = await confirmOTP(values).unwrap();
 
+            console.log(inputOTPResponse.data)
+
             if (inputOTPResponse.statusCode === 200) {
+                dispatch(setCredentials(inputOTPResponse.data))
                 toast.success('OTP Verified')
                 router.push('/')
             }
 
-            dispatch(setCredentials(inputOTPResponse.data))
+            console.log(inputOTPResponse.data)
+
 
 
         } catch (error: any) {

@@ -25,6 +25,7 @@ import { z } from "zod"
 import { Button } from "../button"
 import { useTransition } from "react"
 import usePhoneLogin from "@/hooks/useOtplogin"
+import { Icons } from "@/components/icons"
 
 export function LoginOTPPattern({ phoneNumber }: { phoneNumber: string }) {
     const [isPending, startTransition] = useTransition();
@@ -73,7 +74,7 @@ export function LoginOTPPattern({ phoneNumber }: { phoneNumber: string }) {
                             </FormItem>
                         )}
                     />
-                    <Button type="submit" disabled={isPending} className="w-10/12">Confirm</Button>
+                    <Button type="submit" disabled={isPending} className="w-10/12">{isPending ? <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/> : "Confirm"}</Button>
                 </form>
             </Form>
 

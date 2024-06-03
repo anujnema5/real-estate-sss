@@ -28,6 +28,7 @@ import { RootState } from "@/redux/store"
 import { LoginOTPPattern } from "@/components/ui/custom/login-otp-input"
 import Link from "next/link"
 import GoogleLogin from "./google-login"
+import { Icons } from "@/components/icons"
 
 
 export function OTPLogin() {
@@ -71,7 +72,7 @@ export function OTPLogin() {
                                 </FormItem>
                             )}
                         />
-                        <Button disabled={isPending || OTPInitiated} type="submit" className="w-full">Request OTP</Button>
+                        <Button disabled={isPending || OTPInitiated} type="submit" className="w-full">{isPending ? <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/> : "Request OTP"}</Button>
                     </form>
 
                 </Form>

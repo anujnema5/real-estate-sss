@@ -2,7 +2,6 @@
 import React from 'react'
 import { FcGoogle } from 'react-icons/fc'
 import { Button } from '@/components/ui/button'
-import { FaGithub } from 'react-icons/fa'
 
 const GoogleLogin = () => {
 

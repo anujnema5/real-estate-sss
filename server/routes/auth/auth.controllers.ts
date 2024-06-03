@@ -12,7 +12,7 @@ router.post('/sign-in-otp', use(loginWithOtp, {reqBody: true}))
 router.post('/phone-number-exist', use(phoneNumberExist))
 router.get('/google', use(passport.authenticate('google', { scope: ['profile', 'email'] })))
 router.get('/google/callback', use(passport.authenticate('google', { session: false })), use(googleCallback))
-router.post('/initiate-otp', use(sendOtp))
+router.post('/initiate-otp', use(sendOtp, {reqBody: true}))
 router.post('/confirm-otp', use(confirmOtp))
 
 

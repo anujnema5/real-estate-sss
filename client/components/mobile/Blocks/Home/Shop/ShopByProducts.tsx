@@ -1,6 +1,6 @@
 import Product from '@/components/ui/Product'
 import React from 'react'
-import HeadingWrapper from '../../Layout/Providers/heading-wrapper'
+import HeadingWrapper from '@/components/mobile/Layout/Providers/heading-wrapper'
 
 const ShopByProducts = () => {
     return (
